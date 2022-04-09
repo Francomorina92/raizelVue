@@ -49,8 +49,8 @@ export default defineComponent({
   setup(){
     const route = useRouter(),
           $q = useQuasar(),
-          isPwd= ref(true),
           email = ref(''),
+          isPwd= ref(true),
           password = ref('');
     const registrarse=()=>{
       route.replace({name:'registro'});
@@ -84,9 +84,9 @@ export default defineComponent({
       email,
       isPwd,
       password,
-      validarEmail,
+      onSubmit,
       registrarse,
-      onSubmit
+      validarEmail
     }
   }
 })

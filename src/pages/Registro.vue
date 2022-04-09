@@ -54,11 +54,11 @@ export default defineComponent({
     const route = useRouter(),
           $q = useQuasar(),
           accept = ref(false),
-          isPwd= ref(true),
-          nombre = ref(''),
           email = ref(''),
-          password = ref(''),
-          myForm = ref(null);
+          isPwd= ref(true),
+          myForm = ref(null),
+          nombre = ref(''),
+          password = ref('');
 
     const validate= () => {
       myForm.value.validate().then(success => {
@@ -103,15 +103,15 @@ export default defineComponent({
         }
       }
     return{
-      nombre,
       accept,
-      password,
       email,
       isPwd,
       myForm,
+      nombre,
+      password,
       iniciar,
-      validarEmail,
-      onSubmit
+      onSubmit,
+      validarEmail
     }
   }
 })
