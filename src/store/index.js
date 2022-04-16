@@ -1,6 +1,8 @@
 import { store } from 'quasar/wrappers'
 import { createStore } from 'vuex'
-
+import categorias from './categorias'
+import equipamientos from './equipamientos'
+import musculos from './musculos'
 // import example from './module-example'
 
 /*
@@ -15,7 +17,9 @@ import { createStore } from 'vuex'
 export default store(function (/* { ssrContext } */) {
   const Store = createStore({
     modules: {
-      // example
+      categorias: categorias,
+      equipamientos: equipamientos,
+      musculos: musculos
     },
 
     // enable strict mode (adds overhead!)
