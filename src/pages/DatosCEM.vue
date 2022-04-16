@@ -36,7 +36,7 @@
         <template v-slot:body="props">
           <q-tr :props="props" @click="editar(props.row.id,'Categoria')">
             <q-td key="nombre" :props="props">
-              {{ props.row.nombre }}
+              {{ props.row.nombre.length > 20 ? props.row.nombre.substr(0,20) + '...' : props.row.nombre  }}
             </q-td>
             <q-td key="creada" :props="props">{{ props.row.createdAt }}</q-td>
             <q-td key="actualizada" :props="props">{{ props.row.updatedAt }}</q-td>
@@ -98,7 +98,7 @@
         <template v-slot:body="props">
           <q-tr :props="props" @click="editar(props.row.id,'Equipamiento')">
             <q-td key="nombre" :props="props">
-              {{ props.row.nombre }}
+              {{ props.row.nombre.length > 20 ? props.row.nombre.substr(0,20)+ '...' : props.row.nombre }}
             </q-td>
             <q-td key="creado" :props="props">{{ props.row.createdAt }}</q-td>
             <q-td key="actualizado" :props="props">{{ props.row.updatedAt }}</q-td>
@@ -160,7 +160,7 @@
         <template v-slot:body="props">
           <q-tr :props="props" @click="editar(props.row.id,'Musculo')">
             <q-td key="nombre" :props="props">
-              {{ props.row.nombre }}
+              {{ props.row.nombre.length > 20 ? props.row.nombre.substr(0,20)+ '...' : props.row.nombre }}
             </q-td>
             <q-td key="creado" :props="props">{{ props.row.createdAt }}</q-td>
             <q-td key="actualizado" :props="props">{{ props.row.updatedAt }}</q-td>
@@ -231,7 +231,7 @@ export default defineComponent({
       },
       { name: 'creada', align: 'center', label: 'Creada', field: row => row.createdAt, sortable: true },
       { name: 'actualizada', align: 'center', label: 'Actualizada', field: row => row.updatedAt, sortable: true },
-      { name: 'estado', align: 'center', label: 'Estado', field: row => row.estado,format: val => val?'Activa':'Desactivada', sortable: true }
+      { name: 'estado', align: 'center', label: 'Estado', field: row => row.estado, sortable: true }
     ]
     const columns = [
       {
@@ -395,7 +395,7 @@ export default defineComponent({
 }
 .tabla{
   min-width: 500px;
-  
+  max-width: 532px;
 }
 .plus{
   margin-left: 15px;
