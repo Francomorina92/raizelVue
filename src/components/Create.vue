@@ -51,30 +51,39 @@ export default {
         const onSubmit =async () => {
           let respuesta = null;
           if (props.accion=='C') {
-            respuesta = await store.dispatch('categorias/setCategoria',{nombre: nombre.value, estado: estado.value});
-            nombre.value=''
-            estado.value=null
-            myForm.value.reset()
+            if (props.objeto.tipo =='Categoria') {
+              respuesta = await store.dispatch('categorias/setCategoria',{nombre: nombre.value, estado: estado.value});
+              reset();
+            }else if(props.objeto.tipo =='Equipamiento'){
+              respuesta = await store.dispatch('equipamientos/setEquipamiento',{nombre: nombre.value, estado: estado.value});
+              reset();
+            }
+            if (!respuesta) {
+              $q.notify({
+                timeout: 300,
+                color: 'red-5',
+                textColor: 'white',
+                icon: 'warning',
+                message: 'Se produjo un error'
+              })
+            }
+            else {
+              $q.notify({
+                timeout: 300,
+                color: 'green-4',
+                textColor: 'white',
+                icon: 'cloud_done',
+                message: props.accion=='C' ? 'Se ha podido crear correctamente' :'Se ha podido modificar correctamente'
+              })
+            }  
           }
-          if (!respuesta) {
-            $q.notify({
-              timeout: 200,
-              color: 'red-5',
-              textColor: 'white',
-              icon: 'warning',
-              message: 'Se produjo un error'
-            })
-          }
-          else {
-            $q.notify({
-              timeout: 200,
-              color: 'green-4',
-              textColor: 'white',
-              icon: 'cloud_done',
-              message: props.accion=='C' ? 'Se ha podido crear correctamente' :'Se ha podido modificar correctamente'
-            })
-          }            
-        }        
+                    
+        } 
+        const reset =()=>{
+          nombre.value=''
+          estado.value=null
+          myForm.value.reset()
+        }       
         onUpdated(()=>{
           myForm.value.reset()
           nombre.value=props.objeto.nombre

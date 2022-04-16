@@ -68,41 +68,61 @@
         title="Equipamientos"
         :rows="equipamientos"
         :columns="columns"
+        virtual-scroll
+        :loading="loadingE"
+        :rows-per-page-options="[0]"
+        style="height: 410px; overflow-y:hidden"
         row-key="name"
-        class="tabla"
+        class="tabla encabezadoFijo"
         no-data-label="No encontre nada para ti"
       >
-      <template v-slot:top-right>
-        <q-btn
-          color="primary"
-          icon-right="archive"
-          label="Exportar"
-          no-caps
-          unelevated
-          @click="exportarTable"
-        />
-        <q-btn
-          class="plus"
-          size="12px"
-          color="primary"
-          round
-          unelevated
-          icon="fa-solid fa-plus"
-          @click="crear('Equipamiento')"
-        />
-      </template>
-      <template v-slot:body="props">
-        <q-tr :props="props" @click="editar(props.row.id,'Equipamiento')">
-          <q-td key="nombre" :props="props">
-            {{ props.row.nombre }}
-          </q-td>
-          <q-td key="creado" :props="props">{{ props.row.createdAt }}</q-td>
-          <q-td key="actualizado" :props="props">{{ props.row.updatedAt }}</q-td>
-          <q-td key="estado" :props="props">
-            {{ props.row.estado ? 'Activado' : 'Desactivado' }}
-          </q-td>
-        </q-tr>
-      </template>
+        <template v-slot:top-right>
+          <q-btn
+            color="primary"
+            icon-right="archive"
+            label="Exportar"
+            no-caps
+            unelevated
+            @click="exportarTable"
+          />
+          <q-btn
+            class="plus"
+            size="12px"
+            color="primary"
+            round
+            unelevated
+            icon="fa-solid fa-plus"
+            @click="crear('Equipamiento')"
+          />
+        </template>
+        <template v-slot:body="props">
+          <q-tr :props="props" @click="editar(props.row.id,'Equipamiento')">
+            <q-td key="nombre" :props="props">
+              {{ props.row.nombre }}
+            </q-td>
+            <q-td key="creado" :props="props">{{ props.row.createdAt }}</q-td>
+            <q-td key="actualizado" :props="props">{{ props.row.updatedAt }}</q-td>
+            <q-td key="estado" :props="props">
+              {{ props.row.estado ? 'Activado' : 'Desactivado' }}
+            </q-td>
+          </q-tr>
+        </template>
+        <template v-slot:bottom>
+          <div v-if="respuestaE" class="verMas">
+            <q-btn 
+            flat
+            color="primary"
+            icon-right="fa-solid fa-circle-arrow-down"
+            label="Ver mas"
+            no-caps
+            unelevated
+            @click="fetchEquipamientos()"
+            />
+          </div>
+        </template>
+        <template v-slot:loading>
+          <q-inner-loading showing color="primary" />
+        </template>
       </q-table>
     </div>
     <div class="q-pa-md">
@@ -215,7 +235,8 @@ export default defineComponent({
       await store.dispatch('categorias/loadCategorias',{limite:10,desde:fromCategoria.value});
     }
     const fetchEquipamientos = async()=>{
-      await store.dispatch('equipamientos/loadEquipamientos');
+      const fromEquipamiento = computed(() => store.getters['equipamientos/getFrom']);
+      await store.dispatch('equipamientos/loadEquipamientos',{limite:10,desde:fromEquipamiento.value});
     }
     const fetchMusculos = async()=>{
       await store.dispatch('musculos/loadMusculos');
@@ -254,6 +275,8 @@ export default defineComponent({
     const respuestaC = computed(() => store.getters['categorias/getRespuesta']);
     const loadingC = computed(() => store.getters['categorias/getLoading']);
     const equipamientos = computed(() => store.getters['equipamientos/getEquipamientos']);
+    const respuestaE = computed(() => store.getters['equipamientos/getRespuesta']);
+    const loadingE = computed(() => store.getters['equipamientos/getLoading']);
     const musculos = computed(() => store.getters['musculos/getMusculos']);
     const wrapCsvValue = (val, formatFn) => {
       let formatted = formatFn !== void 0
@@ -314,10 +337,13 @@ export default defineComponent({
       columns,
       columnsCategory,
       equipamientos,
+      respuestaE,
+      loadingE,
       musculos,
       objeto,
       show,
       fetchCategorias,
+      fetchEquipamientos,
       crear,
       editar,
       exportarTable
