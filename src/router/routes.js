@@ -7,6 +7,7 @@ const routes = [
       { path: '',name: 'index', component: () => import('pages/IndexPage.vue') },
       { path: 'login', name:'login', component: () => import('pages/Login.vue') },
       { path: 'registro', name:'registro', component: () => import('pages/Registro.vue') },
+      { path: 'datoscem', name:'datoscem', component: () => import('src/pages/DatosCEM.vue') },
     ]
   },
 
