@@ -58,6 +58,28 @@ export default {
         }finally{
             commit('setLoading', false )
         }        
+    },
+    async editMusculo({ commit },objeto) {
+        try {
+            commit('setLoading', true )
+            const {data} = await api.put(`/musculos/${objeto.id}`,objeto)
+            if ( !data ){
+                return
+            }
+            const dataFormateada = {
+                createdAt: date.formatDate(data.createdAt,'DD-MM-YYYY'),
+                updatedAt: date.formatDate(data.updatedAt,'DD-MM-YYYY'),
+                estado: data.estado,
+                id: data.id,
+                nombre: data.nombre
+            };
+            commit('editMusculo', dataFormateada )
+            return data;
+        } catch (ex) {
+            commit('setError', ex.response.data.errors )
+        }finally{
+            commit('setLoading', false )
+        }
     }
 }
 

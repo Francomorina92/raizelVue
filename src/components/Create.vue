@@ -86,6 +86,9 @@ export default {
             }else if(props.objeto.tipo =='Equipamiento'){
               respuesta = await store.dispatch('equipamientos/editEquipamiento',{id: props.objeto.id, nombre: nombre.value, estado: estado.value});
               reset();
+            }else{
+              respuesta = await store.dispatch('musculos/editMusculo',{id: props.objeto.id, nombre: nombre.value, estado: estado.value});
+              reset();
             }
             if (!respuesta) {
               $q.notify({
