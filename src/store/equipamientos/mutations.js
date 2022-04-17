@@ -12,6 +12,17 @@ export default{
         state.equipamientos = [ ...state.equipamientos, equipamiento ]
         state.isLoading = false
     },
+    editEquipamiento : ( state, equipamiento ) => {
+        const equipamientos = state.equipamientos.map(function (x) {
+            if (x.id==equipamiento.id) {
+                return equipamiento                
+            }else{
+                return x
+            }
+        });
+        state.equipamientos = [ ...equipamientos]
+        state.isLoading = false
+    },
     setRespuesta : ( state, respuesta ) => {
         state.respuesta = respuesta
     },

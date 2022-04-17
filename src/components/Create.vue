@@ -83,6 +83,9 @@ export default {
             if (props.objeto.tipo =='Categoria') {
               respuesta = await store.dispatch('categorias/editCategoria',{id: props.objeto.id, nombre: nombre.value, estado: estado.value});
               reset();
+            }else if(props.objeto.tipo =='Equipamiento'){
+              respuesta = await store.dispatch('equipamientos/editEquipamiento',{id: props.objeto.id, nombre: nombre.value, estado: estado.value});
+              reset();
             }
             if (!respuesta) {
               $q.notify({

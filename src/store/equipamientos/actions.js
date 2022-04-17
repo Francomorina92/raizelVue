@@ -60,6 +60,28 @@ export default {
             commit('setLoading', false )
         }
         
+    },
+    async editEquipamiento({ commit },objeto) {
+        try {
+            commit('setLoading', true )
+            const {data} = await api.put(`/equipamientos/${objeto.id}`,objeto)
+            if ( !data ){
+                return
+            }
+            const dataFormateada = {
+                createdAt: date.formatDate(data.createdAt,'DD-MM-YYYY'),
+                updatedAt: date.formatDate(data.updatedAt,'DD-MM-YYYY'),
+                estado: data.estado ? 'Activo' : 'Desactivado',
+                id: data.id,
+                nombre: data.nombre
+            };
+            commit('editEquipamiento', dataFormateada )
+            return data;
+        } catch (ex) {
+            commit('setError', ex.response.data.errors )
+        }finally{
+            commit('setLoading', false )
+        }
     }
 }
 
