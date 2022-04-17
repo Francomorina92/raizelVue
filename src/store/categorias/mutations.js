@@ -12,6 +12,17 @@ export default{
         state.categorias = [ ...state.categorias, categoria ]
         state.isLoading = false
     },
+    editCategoria : ( state, categoria ) => {
+        const categorias = state.categorias.map(function (x) {
+            if (x.id==categoria.id) {
+                return categoria                
+            }else{
+                return x
+            }
+        });
+        state.categorias = [ ...categorias]
+        state.isLoading = false
+    },
     setRespuesta : ( state, respuesta ) => {
         state.respuesta = respuesta
     },
