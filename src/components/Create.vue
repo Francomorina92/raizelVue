@@ -79,6 +79,29 @@ export default {
                 message: props.accion=='C' ? 'Se ha podido crear correctamente' :'Se ha podido modificar correctamente'
               })
             }  
+          }else if (props.accion=='E') {
+            if (props.objeto.tipo =='Categoria') {
+              respuesta = await store.dispatch('categorias/editCategoria',{id: props.objeto.id, nombre: nombre.value, estado: estado.value});
+              reset();
+            }
+            if (!respuesta) {
+              $q.notify({
+                timeout: 300,
+                color: 'red-5',
+                textColor: 'white',
+                icon: 'warning',
+                message: 'Se produjo un error'
+              })
+            }
+            else {
+              $q.notify({
+                timeout: 300,
+                color: 'green-4',
+                textColor: 'white',
+                icon: 'cloud_done',
+                message: props.accion=='C' ? 'Se ha podido crear correctamente' :'Se ha podido modificar correctamente'
+              })
+            } 
           }
                     
         } 
