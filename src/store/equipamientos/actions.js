@@ -5,7 +5,7 @@ export default {
     async loadEquipamientos({ commit }, objeto) {
         try {
             commit('setLoading', true )
-            const {data} = await api.get(`/equipamientos/${objeto.limite}/${objeto.desde}`)
+            const {data} = await api.get(`/equipamientos`,{params:{limite:objeto.limite, desde:objeto.desde}})
             const {rows} = data.equipamientos;
             if ( !rows ){
                 commit('setLoading', false )
@@ -48,7 +48,7 @@ export default {
             const dataFormateada = {
                 createdAt: date.formatDate(data.createdAt,'DD-MM-YYYY'),
                 updatedAt: date.formatDate(data.updatedAt,'DD-MM-YYYY'),
-                estado: data.estado ? 'Activo' : 'Desactivado',
+                estado: data.estado,
                 id: data.id,
                 nombre: data.nombre
             };
@@ -71,7 +71,7 @@ export default {
             const dataFormateada = {
                 createdAt: date.formatDate(data.createdAt,'DD-MM-YYYY'),
                 updatedAt: date.formatDate(data.updatedAt,'DD-MM-YYYY'),
-                estado: data.estado ? 'Activo' : 'Desactivado',
+                estado: data.estado,
                 id: data.id,
                 nombre: data.nombre
             };

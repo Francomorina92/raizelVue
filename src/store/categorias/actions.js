@@ -5,7 +5,7 @@ export default {
     async loadCategorias({ commit },objeto) {
         try {
             commit('setLoading', true )
-            const {data} = await api.get(`/categorias/${objeto.limite}/${objeto.desde}`)
+            const {data} = await api.get(`/categorias`, {params:{limite:objeto.limite, desde:objeto.desde}})
             const {rows}=data.categorias;
             if ( !rows ){
                 commit('setLoading', false )
@@ -49,7 +49,7 @@ export default {
             const dataFormateada = {
                 createdAt: date.formatDate(data.createdAt,'DD-MM-YYYY'),
                 updatedAt: date.formatDate(data.updatedAt,'DD-MM-YYYY'),
-                estado: data.estado ? 'Activa' : 'Desactivada',
+                estado: data.estado,
                 id: data.id,
                 nombre: data.nombre
             };
@@ -72,7 +72,7 @@ export default {
             const dataFormateada = {
                 createdAt: date.formatDate(data.createdAt,'DD-MM-YYYY'),
                 updatedAt: date.formatDate(data.updatedAt,'DD-MM-YYYY'),
-                estado: data.estado ? 'Activa' : 'Desactivada',
+                estado: data.estado,
                 id: data.id,
                 nombre: data.nombre
             };

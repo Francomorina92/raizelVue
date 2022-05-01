@@ -5,7 +5,7 @@ export default {
     async loadMusculos({ commit }, objeto) {
         try {
             commit('setLoading', true )
-            const {data} = await api.get(`/musculos/${objeto.limite}/${objeto.desde}`)
+            const {data} = await api.get(`/musculos`,{params:{limite:objeto.limite, desde:objeto.desde}})
             const {rows}=data.musculos;
             if ( !rows ){
                 commit('setLoading', false )
@@ -47,7 +47,7 @@ export default {
             const dataFormateada = {
                 createdAt: date.formatDate(data.createdAt,'DD-MM-YYYY'),
                 updatedAt: date.formatDate(data.updatedAt,'DD-MM-YYYY'),
-                estado: data.estado ? 'Activo' : 'Desactivado',
+                estado: data.estado,
                 id: data.id,
                 nombre: data.nombre
             };
