@@ -5,15 +5,16 @@ export default {
     async loadEquipamientos({ commit }, objeto) {
         try {
             commit('setLoading', true )
-            const {data} = await api.get(`/equipamientos`,{params:{limite:objeto.limite, desde:objeto.desde}})
-            const {rows} = data.equipamientos;
+            const {data} = await api.get(`/equipamientos`,{params:{limite:objeto.limite, desde:objeto.desde, filtro: objeto.filtro}})
+            const rows = data.equipamientos;
             if ( !rows ){
                 commit('setLoading', false )
                 commit('setRespuesta', false )
                 return
-            }else if (rows.length < 10) {
+            }else if (rows.length < 11) {
                 commit('setRespuesta', false )
             }else{
+                rows.pop();
                 commit('setRespuesta', true )
             }
             commit('setFrom', rows.length)
@@ -77,6 +78,16 @@ export default {
             };
             commit('editEquipamiento', dataFormateada )
             return data;
+        } catch (ex) {
+            commit('setError', ex.response.data.errors )
+        }finally{
+            commit('setLoading', false )
+        }
+    },
+    async resetEquipamientos({ commit }) {
+        try {
+            commit('setLoading', true )
+            commit('resetEquipamientos')
         } catch (ex) {
             commit('setError', ex.response.data.errors )
         }finally{

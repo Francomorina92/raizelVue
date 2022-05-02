@@ -5,16 +5,17 @@ export default {
     async loadCategorias({ commit },objeto) {
         try {
             commit('setLoading', true )
-            const {data} = await api.get(`/categorias`, {params:{limite:objeto.limite, desde:objeto.desde}})
-            const {rows}=data.categorias;
+            const {data} = await api.get(`/categorias`, {params:{limite:objeto.limite, desde:objeto.desde, filtro: objeto.filtro}})
+            const rows=data.categorias;
             if ( !rows ){
                 commit('setLoading', false )
                 commit('setRespuesta', false )
                 return
-            }else if (rows.length < 10) {
+            }else if (rows.length < 11) {
                 commit('setRespuesta', false )
             }else{
                 commit('setRespuesta', true )
+                rows.pop();
             }
             commit('setFrom', rows.length)
             const rowsFormateada = rows.map(function(x) {
@@ -78,6 +79,16 @@ export default {
             };
             commit('editCategoria', dataFormateada )
             return data;
+        } catch (ex) {
+            commit('setError', ex.response.data.errors )
+        }finally{
+            commit('setLoading', false )
+        }
+    },
+    async resetCategorias({ commit }) {
+        try {
+            commit('setLoading', true )
+            commit('resetCategorias')
         } catch (ex) {
             commit('setError', ex.response.data.errors )
         }finally{

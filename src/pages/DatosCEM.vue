@@ -8,12 +8,15 @@
         virtual-scroll
         :loading="loadingC"
         :rows-per-page-options="[0]"
+        :filter="filtroCategoria"
         style="height: 410px; overflow-y:hidden"
         row-key="name"
         class="tabla encabezadoFijo"
         no-data-label="No encontre nada para ti"
       >
         <template v-slot:top-right>
+          <q-input borderless dense debounce="100" v-model="filtroCategoria" placeholder="Busqueda" @keyup.enter="busquedaCategoria(1)" @keyup.delete="busquedaCategoria(0)">
+          </q-input>
           <q-btn
           color="primary"
           icon-right="archive"
@@ -71,12 +74,15 @@
         virtual-scroll
         :loading="loadingE"
         :rows-per-page-options="[0]"
+        :filter="filtroEquipamiento"
         style="height: 410px; overflow-y:hidden"
         row-key="name"
         class="tabla encabezadoFijo"
         no-data-label="No encontre nada para ti"
       >
         <template v-slot:top-right>
+          <q-input borderless dense debounce="100" v-model="filtroEquipamiento" placeholder="Busqueda" @keyup.enter="busquedaEquipamiento(1)" @keyup.delete="busquedaEquipamiento(0)">
+          </q-input>
           <q-btn
             color="primary"
             icon-right="archive"
@@ -133,12 +139,15 @@
         virtual-scroll
         :loading="loadingM"
         :rows-per-page-options="[0]"
+        :filter="filtroMusculo"
         style="height: 410px; overflow-y:hidden"
         row-key="name"
         class="tabla encabezadoFijo"
         no-data-label="No encontre nada para ti"
       >
         <template v-slot:top-right>
+          <q-input borderless dense debounce="100" v-model="filtroMusculo" placeholder="Busqueda" @keyup.enter="busquedaMusculo(1)" @keyup.delete="busquedaMusculo(0)">
+          </q-input>
           <q-btn
             color="primary"
             icon-right="archive"
@@ -216,6 +225,9 @@ export default defineComponent({
           $q = useQuasar(),
           objeto = ref({}),
           accion = ref(),
+          filtroCategoria = ref(''),
+          filtroEquipamiento = ref(''),
+          filtroMusculo = ref(''),
           show = ref(false);
   
     //Columnas tablas
@@ -252,15 +264,42 @@ export default defineComponent({
     }
     const fetchCategorias = async()=>{
       const fromCategoria = computed(() => store.getters['categorias/getFrom']);
-      await store.dispatch('categorias/loadCategorias',{limite:10,desde:fromCategoria.value});
+      await store.dispatch('categorias/loadCategorias',{limite:11,desde:fromCategoria.value,filtro:filtroCategoria.value});
+    }
+    const busquedaCategoria = async(tecla)=>{
+      if (tecla==0 && filtroCategoria.value.length==1) {
+        filtroCategoria.value='';
+      }
+      if (tecla==1||filtroCategoria.value.length==0) {
+        await store.dispatch('categorias/resetCategorias');
+        fetchCategorias();
+      }
     }
     const fetchEquipamientos = async()=>{
       const fromEquipamiento = computed(() => store.getters['equipamientos/getFrom']);
-      await store.dispatch('equipamientos/loadEquipamientos',{limite:10,desde:fromEquipamiento.value});
+      await store.dispatch('equipamientos/loadEquipamientos',{limite:11,desde:fromEquipamiento.value, filtro:filtroEquipamiento.value});
+    }
+    const busquedaEquipamiento = async(tecla)=>{
+      if (tecla==0 && filtroEquipamiento.value.length==1) {
+        filtroEquipamiento.value='';
+      }
+      if (tecla==1||filtroEquipamiento.value.length==0) {
+        await store.dispatch('equipamientos/resetEquipamientos');
+        fetchEquipamientos();
+      }
     }
     const fetchMusculos = async()=>{
       const fromMusculo = computed(() => store.getters['musculos/getFrom']);
-      await store.dispatch('musculos/loadMusculos',{limite:10,desde:fromMusculo.value});
+      await store.dispatch('musculos/loadMusculos',{limite:11,desde:fromMusculo.value, filtro: filtroMusculo.value});
+    }
+    const busquedaMusculo = async(tecla)=>{
+      if (tecla==0 && filtroMusculo.value.length==1) {
+        filtroMusculo.value='';
+      }
+      if (tecla==1||filtroMusculo.value.length==0) {
+        await store.dispatch('musculos/resetMusculos');
+        fetchMusculos();
+      }
     }
     onMounted(()=> 
       extra(),
@@ -354,6 +393,9 @@ export default defineComponent({
     }
     return{
       accion,
+      filtroCategoria,
+      filtroEquipamiento,
+      filtroMusculo,
       categorias,
       respuestaC,
       loadingC,
@@ -370,6 +412,9 @@ export default defineComponent({
       fetchCategorias,
       fetchEquipamientos,
       fetchMusculos,
+      busquedaCategoria,
+      busquedaEquipamiento,
+      busquedaMusculo,
       crear,
       editar,
       exportarTable

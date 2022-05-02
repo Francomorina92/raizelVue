@@ -12,6 +12,13 @@ export default{
         state.musculos = [ ...state.musculos, musculo ]
         state.isLoading = false
     },
+    resetMusculos : ( state ) => {
+        state.isLoading= false,
+        state.musculos= [],
+        state.respuesta= null,
+        state.error= null,
+        state.from= 0
+    },
     editMusculo : ( state, musculo ) => {
         const musculos = state.musculos.map(function (x) {
             if (x.id==musculo.id) {

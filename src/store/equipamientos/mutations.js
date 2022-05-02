@@ -8,6 +8,13 @@ export default{
         state.equipamientos = [ ...state.equipamientos, ...rowsFormateada ]
         state.isLoading = false
     },
+    resetEquipamientos : ( state ) => {
+        state.isLoading= false,
+        state.equipamientos= [],
+        state.respuesta= null,
+        state.error= null,
+        state.from= 0
+    },
     setEquipamiento : ( state, equipamiento ) => {
         state.equipamientos = [ ...state.equipamientos, equipamiento ]
         state.isLoading = false
