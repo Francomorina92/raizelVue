@@ -8,6 +8,13 @@ export default{
         state.categorias = [ ...state.categorias, ...rowsFormateada ]
         state.isLoading = false
     },
+    resetCategorias : ( state ) => {
+        state.isLoading= false,
+        state.categorias= [],
+        state.respuesta= null,
+        state.error= null,
+        state.from= 0
+    },
     setCategoria : ( state, categoria ) => {
         state.categorias = [ ...state.categorias, categoria ]
         state.isLoading = false
