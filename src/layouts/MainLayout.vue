@@ -58,9 +58,9 @@
                 </q-item>
                 <q-separator />
                 <!-- Datos -->
-                <q-item clickable dense to="/datoscem">
+                <q-item clickable dense to="/usuarios">
                   <q-item-section>
-                    <q-item-label>Datos</q-item-label>
+                    <q-item-label>Usuarios</q-item-label>
                   </q-item-section>
                   <q-item-section side>
                   </q-item-section>                  
