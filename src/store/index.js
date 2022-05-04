@@ -3,6 +3,7 @@ import { createStore } from 'vuex'
 import categorias from './categorias'
 import equipamientos from './equipamientos'
 import musculos from './musculos'
+import usuarios from './usuarios'
 // import example from './module-example'
 
 /*
@@ -19,7 +20,8 @@ export default store(function (/* { ssrContext } */) {
     modules: {
       categorias: categorias,
       equipamientos: equipamientos,
-      musculos: musculos
+      musculos: musculos,
+      usuarios: usuarios,
     },
 
     // enable strict mode (adds overhead!)
