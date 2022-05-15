@@ -4,6 +4,7 @@ import categorias from './categorias'
 import equipamientos from './equipamientos'
 import musculos from './musculos'
 import usuarios from './usuarios'
+import ejercicios from './ejercicios'
 // import example from './module-example'
 
 /*
@@ -22,6 +23,7 @@ export default store(function (/* { ssrContext } */) {
       equipamientos: equipamientos,
       musculos: musculos,
       usuarios: usuarios,
+      ejercicios: ejercicios,
     },
 
     // enable strict mode (adds overhead!)
