@@ -48,19 +48,10 @@
             <q-menu anchor="top end" self="top start">
               <!-- nivel 1 -->
               <q-list class="no-border-radius" style="min-width: 80px; max-width: 180px">
-                <!-- Datos -->
-                <q-item clickable dense to="/datoscem">
+                <!-- Ejercicios -->
+                <q-item clickable dense to="/ejercicios">
                   <q-item-section>
-                    <q-item-label>Datos</q-item-label>
-                  </q-item-section>
-                  <q-item-section side>
-                  </q-item-section>                  
-                </q-item>
-                <q-separator />
-                <!-- Datos -->
-                <q-item clickable dense to="/usuarios">
-                  <q-item-section>
-                    <q-item-label>Usuarios</q-item-label>
+                    <q-item-label>Ejercicios</q-item-label>
                   </q-item-section>
                   <q-item-section side>
                   </q-item-section>                  
@@ -73,7 +64,16 @@
                   </q-item-section>
                   <q-item-section side>
                   </q-item-section>                  
-                </q-item>  
+                </q-item>
+                <q-separator />
+                <!-- Usuarios -->
+                <q-item clickable dense to="/usuarios">
+                  <q-item-section>
+                    <q-item-label>Usuarios</q-item-label>
+                  </q-item-section>
+                  <q-item-section side>
+                  </q-item-section>                  
+                </q-item>                 
               </q-list>
             </q-menu>
           </div>
