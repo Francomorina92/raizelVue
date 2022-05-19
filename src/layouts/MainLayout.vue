@@ -31,58 +31,92 @@
           :key="link.title"
           v-bind="link"
         />
-          <div class="cursor-pointer non-selectable">
-            <q-item
-              clickable            
-            >
-              <q-item-section class="icono"
-                avatar
-              > 
-                <q-icon name="fa-solid fa-gears" />
-              </q-item-section>
+        <div class="cursor-pointer non-selectable" v-if="user && user.rol =='ADMIN_ROLE'">
+          <q-item
+            clickable            
+          >
+            <q-item-section class="icono"
+              avatar
+            > 
+              <q-icon name="fa-solid fa-gears" />
+            </q-item-section>
 
-              <q-item-section>
-                <q-item-label>Administrar</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-menu anchor="top end" self="top start">
-              <!-- nivel 1 -->
-              <q-list class="no-border-radius" style="min-width: 80px; max-width: 180px">
-                <!-- Ejercicios -->
-                <q-item clickable dense to="/ejercicios">
-                  <q-item-section>
-                    <q-item-label>Ejercicios</q-item-label>
-                  </q-item-section>
-                  <q-item-section side>
-                  </q-item-section>                  
-                </q-item>                
-                <q-separator />
-                <!-- Datos -->
-                <q-item clickable dense to="/datoscem">
-                  <q-item-section>
-                    <q-item-label>Datos</q-item-label>
-                  </q-item-section>
-                  <q-item-section side>
-                  </q-item-section>                  
-                </q-item>
-                <q-separator />
-                <!-- Usuarios -->
-                <q-item clickable dense to="/usuarios">
-                  <q-item-section>
-                    <q-item-label>Usuarios</q-item-label>
-                  </q-item-section>
-                  <q-item-section side>
-                  </q-item-section>                  
-                </q-item>                 
-              </q-list>
-            </q-menu>
-          </div>
+            <q-item-section>
+              <q-item-label>Administrar</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-menu anchor="top end" self="top start">
+            <!-- nivel 1 -->
+            <q-list class="no-border-radius" style="min-width: 80px; max-width: 180px">
+              <!-- Ejercicios -->
+              <q-item clickable dense to="/ejercicios">
+                <q-item-section>
+                  <q-item-label>Ejercicios</q-item-label>
+                </q-item-section>
+                <q-item-section side>
+                </q-item-section>                  
+              </q-item>                
+              <q-separator />
+              <!-- Datos -->
+              <q-item clickable dense to="/datoscem">
+                <q-item-section>
+                  <q-item-label>Datos</q-item-label>
+                </q-item-section>
+                <q-item-section side>
+                </q-item-section>                  
+              </q-item>
+              <q-separator />
+              <!-- Usuarios -->
+              <q-item clickable dense to="/usuarios">
+                <q-item-section>
+                  <q-item-label>Usuarios</q-item-label>
+                </q-item-section>
+                <q-item-section side>
+                </q-item-section>                  
+              </q-item>                 
+            </q-list>
+          </q-menu>
+        </div>
         <div class="fixed-bottom">
-        <EssentialLink
-          v-for="link in links"
-          :key="link.title"
-          v-bind="link" 
-        />
+          <!-- Configuracion -->
+        <q-item clickable to="/configuracion">
+          <q-item-section class="icono"
+            avatar
+          > 
+            <q-icon name="fa-solid fa-gear" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Configuracion</q-item-label>
+          </q-item-section>
+          <q-item-section side>
+          </q-item-section>                  
+        </q-item>             
+        <!-- Login -->   
+        <q-item clickable to="/login" v-if="!autenticado">
+          <q-item-section class="icono"
+            avatar
+          > 
+            <q-icon name="fa-solid fa-arrow-right-from-bracket" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Iniciar Sesion</q-item-label>
+          </q-item-section>
+          <q-item-section side>
+          </q-item-section>                  
+        </q-item>     
+        <!-- Cerrar -->           
+        <q-item clickable @click="singOut()" v-else>
+          <q-item-section class="icono"
+            avatar
+          > 
+            <q-icon name="fa-solid fa-arrow-right-from-bracket" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Cerrar Sesion</q-item-label>
+          </q-item-section>
+          <q-item-section side>
+          </q-item-section>                  
+        </q-item>                
         </div>
       </q-list>
     </q-drawer>
@@ -94,8 +128,11 @@
 </template>
 
 <script>
-import { defineComponent, onMounted, ref } from 'vue'
+import { useQuasar } from 'quasar'
+import { defineComponent, onMounted, ref, computed, onUpdated } from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -106,6 +143,9 @@ export default defineComponent({
 
   setup () {
     const menuAbierto = ref(false),
+          route = useRouter(),
+          $q = useQuasar(),
+          store = useStore(),
           ruta = ref('login'),
           titulo = ref('Iniciar Sesion');
     const linksList = [
@@ -125,40 +165,42 @@ export default defineComponent({
         link: 'https://chat.quasar.dev'
       }
     ]
-    const links = [
-      {
-        title: 'Configuracion',
-        icon: 'fa-solid fa-gear',
-        link: 'https://quasar.dev'
-      },
-      {
-        title: titulo.value,
-        icon: 'fa-solid fa-arrow-right-from-bracket',
-        link: ruta.value
+    
+    const singOut= async()=>{
+      await store.dispatch('auth/singOut');
+      route.push('/login');
+    }
+    const comprobar = async()=>{
+      await store.dispatch('auth/comprobar');
+      if (!autenticado.value) {
+        $q.notify({
+          timeout: 400,
+          color: 'red-5',
+          textColor: 'white',
+          icon: 'warning',
+          message: 'Debes iniciar sesion'
+        })
+        route.push('/login');
       }
-    ]
-    
-    ruta.value= 'login'
-    titulo.value='Iniciar Sesion'
-    
-
+    }
+    const autenticado = computed(() => store.getters['auth/getAutenticado']);
+    const user = computed(() => store.getters['auth/getMe']);
     onMounted(()=>{
-      if (true) {
-        ruta.value= 'login'
-        titulo.value='Iniciar Sesion'
-      }else{
-        ruta.value='logout',
-        titulo.value='Salir'
-      }
+      comprobar()
+    })
+    onUpdated(()=>{
+      comprobar()
     })
           
 
     return {
+      autenticado,
       linksList,
-      links,
+      user,
       ruta,
       titulo,
       menuAbierto,
+      singOut,
       abrirMenu () {
         menuAbierto.value = !menuAbierto.value
       }

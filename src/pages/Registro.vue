@@ -47,12 +47,14 @@
 import { useQuasar } from 'quasar'
 import { defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'Registro',
   setup(){
     const route = useRouter(),
           $q = useQuasar(),
+          store = useStore(),
           accept = ref(false),
           email = ref(''),
           isPwd= ref(true),
@@ -81,8 +83,8 @@ export default defineComponent({
       }
       return false;
     }
-    const onSubmit = () => {
-      console.log('registrandote');
+    const onSubmit = async() => {
+        
         if (accept.value !== true) {
           $q.notify({
             timeout: 200,
@@ -93,13 +95,26 @@ export default defineComponent({
           })
         }
         else {
-          $q.notify({
-            timeout: 200,
-            color: 'green-4',
-            textColor: 'white',
-            icon: 'cloud_done',
-            message: 'Logeado'
-          })
+          const respuesta = await store.dispatch('usuarios/setUsuario',{email: email.value,nombre: nombre.value, password: password.value});
+          if (!respuesta) {
+            $q.notify({
+              timeout: 300,
+              color: 'red-5',
+              textColor: 'white',
+              icon: 'warning',
+              message: 'Se produjo un error'
+            })            
+          }
+          else {
+            await $q.notify({
+              timeout: 300,
+              color: 'green-4',
+              textColor: 'white',
+              icon: 'cloud_done',
+              message: 'Logeado'
+            })
+            route.push({name: 'login'});
+          }  
         }
       }
     return{

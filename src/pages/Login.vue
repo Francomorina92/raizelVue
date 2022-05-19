@@ -43,11 +43,13 @@
 import { useQuasar } from 'quasar'
 import { defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'Login',
   setup(){
     const route = useRouter(),
+          store = useStore(),
           $q = useQuasar(),
           email = ref(''),
           isPwd= ref(true),
@@ -62,23 +64,22 @@ export default defineComponent({
       }
       return false;
     }
-    const onSubmit = () => {
-        if (accept.value !== true) {
-          $q.notify({
-            color: 'red-5',
-            textColor: 'white',
-            icon: 'warning',
-            message: 'Primero debe aceptar los términos'
-          })
+    const onSubmit = async() => {
+        try {
+          const respuesta = await store.dispatch('auth/login',{email: email.value, password: password.value});
+          route.push('/');
+        } catch (error) {
+          if (error.response.data.msg) {
+            $q.notify({
+              timeout: 400,
+              color: 'red-5',
+              textColor: 'white',
+              icon: 'warning',
+              message: error.response.data.msg
+            })
+          }          
         }
-        else {
-          $q.notify({
-            color: 'green-4',
-            textColor: 'white',
-            icon: 'cloud_done',
-            message: 'Logeado'
-          })
-        }
+      
       }
     return{
       email,
