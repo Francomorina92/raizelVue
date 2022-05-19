@@ -222,7 +222,7 @@ export default defineComponent({
     }
     const guardar = async () => {
       edit.value = false;
-      respuesta = await store.dispatch('perfiles/editPerfil',{id: route.params.id,idUsuario: perfil.value.id, nombre: nombre.value,apellido: apellido.value,facebook: facebook.value,twitter: twitter.value,instagram: instagram.value,web: web.value});
+      await store.dispatch('perfiles/editPerfil',{id: route.params.id,idUsuario: perfil.value.id, nombre: nombre.value,apellido: apellido.value,facebook: facebook.value,twitter: twitter.value,instagram: instagram.value,web: web.value});
     }
     const cancelar = () => {
       edit.value = false;
