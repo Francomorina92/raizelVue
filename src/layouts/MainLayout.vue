@@ -26,6 +26,31 @@
       class="absolute"
     >
       <q-list >
+        <q-item clickable @click="linkPerfil()">
+          <q-item-section class="icono"
+            avatar
+          > 
+            <q-icon name="fa-solid fa-user" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Mi Perfil</q-item-label>
+          </q-item-section>
+          <q-item-section side>
+          </q-item-section>                  
+        </q-item>
+        <!-- Ejercicios -->
+        <q-item clickable to="/ejercicios">
+          <q-item-section class="icono"
+            avatar
+          > 
+            <q-icon name="fa-solid fa-dumbbell" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Ejercicios</q-item-label>
+          </q-item-section>
+          <q-item-section side>
+          </q-item-section>                  
+        </q-item>
         <EssentialLink
           v-for="link in linksList"
           :key="link.title"
@@ -48,15 +73,6 @@
           <q-menu anchor="top end" self="top start">
             <!-- nivel 1 -->
             <q-list class="no-border-radius" style="min-width: 80px; max-width: 180px">
-              <!-- Ejercicios -->
-              <q-item clickable dense to="/ejercicios">
-                <q-item-section>
-                  <q-item-label>Ejercicios</q-item-label>
-                </q-item-section>
-                <q-item-section side>
-                </q-item-section>                  
-              </q-item>                
-              <q-separator />
               <!-- Datos -->
               <q-item clickable dense to="/datoscem">
                 <q-item-section>
@@ -150,11 +166,6 @@ export default defineComponent({
           titulo = ref('Iniciar Sesion');
     const linksList = [
       {
-        title: 'Mi Perfil',
-        icon: 'fa-solid fa-user',
-        link: 'login'
-      },
-      {
         title: 'Buscar Rutinas',
         icon: 'fa-solid fa-magnifying-glass',
         link: 'https://github.com/quasarframework'
@@ -183,6 +194,9 @@ export default defineComponent({
         route.push('/login');
       }
     }
+    const linkPerfil = ()=>{
+      route.push({name: 'perfil', params: { id: user.value.id}});
+    }
     const autenticado = computed(() => store.getters['auth/getAutenticado']);
     const user = computed(() => store.getters['auth/getMe']);
     onMounted(()=>{
@@ -201,6 +215,7 @@ export default defineComponent({
       titulo,
       menuAbierto,
       singOut,
+      linkPerfil,
       abrirMenu () {
         menuAbierto.value = !menuAbierto.value
       }

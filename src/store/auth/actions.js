@@ -14,6 +14,9 @@ export const comprobar = async ({commit, dispatch}) => {
     if (!token) {
         api.defaults.headers.common.accessToken = ''
         commit('removeToken')
+        localStorage.setItem('accessToken', '');
+        localStorage.setItem('usuario', JSON.stringify({}));
+        commit('setMe', JSON.parse(usuario))
     }else{
         commit('setToken', token)
         commit('setMe', JSON.parse(usuario))
