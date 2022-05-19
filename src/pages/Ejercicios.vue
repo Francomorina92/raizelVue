@@ -154,7 +154,6 @@ export default defineComponent({
     const fetchDatos = async()=>{
       Promise.all([fetchMusculos(),fetchEquipamientos(),fetchCategorias()])
       .then(()=>{
-        console.log('todo bien');
         fetchEjercicios();
       })
       .catch(()=>{

@@ -5,6 +5,7 @@ import equipamientos from './equipamientos'
 import musculos from './musculos'
 import usuarios from './usuarios'
 import ejercicios from './ejercicios'
+import auth from './auth'
 // import example from './module-example'
 
 /*
@@ -24,6 +25,7 @@ export default store(function (/* { ssrContext } */) {
       musculos: musculos,
       usuarios: usuarios,
       ejercicios: ejercicios,
+      auth: auth
     },
 
     // enable strict mode (adds overhead!)
