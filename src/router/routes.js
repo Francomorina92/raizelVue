@@ -10,6 +10,7 @@ const routes = [
       { path: 'datoscem', name:'datoscem', component: () => import('src/pages/DatosCEM.vue') },
       { path: 'usuarios', name:'usuarios', component: () => import('src/pages/Usuarios.vue') },
       { path: 'ejercicios', name:'ejercicios', component: () => import('src/pages/Ejercicios.vue') },
+      { path: 'rutinas/:id', name:'rutinas', component: () => import('src/pages/Rutinas.vue') },
       { path: 'perfil/:id', name:'perfil', component: () => import('src/pages/Perfil.vue') },
     ]
   },

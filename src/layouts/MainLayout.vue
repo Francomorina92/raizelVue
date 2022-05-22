@@ -26,7 +26,7 @@
       class="absolute"
     >
       <q-list >
-        <q-item clickable @click="linkPerfil()">
+        <q-item clickable @click="linkPerfil()" v-if="user.rol">
           <q-item-section class="icono"
             avatar
           > 
@@ -47,6 +47,19 @@
           </q-item-section>
           <q-item-section>
             <q-item-label>Ejercicios</q-item-label>
+          </q-item-section>
+          <q-item-section side>
+          </q-item-section>                  
+        </q-item>
+        <!-- Mis Rutinas -->
+        <q-item clickable @click="linkRutinas()">
+          <q-item-section class="icono"
+            avatar
+          > 
+            <q-icon name="fa-solid fa-clock-rotate-left" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Mis rutinas</q-item-label>
           </q-item-section>
           <q-item-section side>
           </q-item-section>                  
@@ -102,7 +115,7 @@
             <q-icon name="fa-solid fa-gear" />
           </q-item-section>
           <q-item-section>
-            <q-item-label>Configuracion</q-item-label>
+            <q-item-label>Configuración</q-item-label>
           </q-item-section>
           <q-item-section side>
           </q-item-section>                  
@@ -115,7 +128,7 @@
             <q-icon name="fa-solid fa-arrow-right-from-bracket" />
           </q-item-section>
           <q-item-section>
-            <q-item-label>Iniciar Sesion</q-item-label>
+            <q-item-label>Iniciar Sesión</q-item-label>
           </q-item-section>
           <q-item-section side>
           </q-item-section>                  
@@ -128,7 +141,7 @@
             <q-icon name="fa-solid fa-arrow-right-from-bracket" />
           </q-item-section>
           <q-item-section>
-            <q-item-label>Cerrar Sesion</q-item-label>
+            <q-item-label>Cerrar Sesión</q-item-label>
           </q-item-section>
           <q-item-section side>
           </q-item-section>                  
@@ -148,7 +161,7 @@ import { useQuasar } from 'quasar'
 import { defineComponent, onMounted, ref, computed, onUpdated } from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
 import { useStore } from 'vuex'
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -160,6 +173,7 @@ export default defineComponent({
   setup () {
     const menuAbierto = ref(false),
           route = useRouter(),
+          rout = useRoute(),
           $q = useQuasar(),
           store = useStore(),
           ruta = ref('login'),
@@ -171,7 +185,7 @@ export default defineComponent({
         link: 'https://github.com/quasarframework'
       },
       {
-        title: 'Estadisticas',
+        title: 'Estadísticas',
         icon: 'fa-solid fa-chart-column',
         link: 'https://chat.quasar.dev'
       }
@@ -197,13 +211,18 @@ export default defineComponent({
     const linkPerfil = ()=>{
       route.push({name: 'perfil', params: { id: user.value.id}});
     }
+    const linkRutinas = ()=>{
+      route.push({name: 'rutinas', params: { id: user.value.id}});
+    }
     const autenticado = computed(() => store.getters['auth/getAutenticado']);
     const user = computed(() => store.getters['auth/getMe']);
     onMounted(()=>{
       comprobar()
     })
     onUpdated(()=>{
-      comprobar()
+      if (rout.path != '/registro' && rout.path != '/login') {
+        comprobar()
+      }
     })
           
 
@@ -216,6 +235,7 @@ export default defineComponent({
       menuAbierto,
       singOut,
       linkPerfil,
+      linkRutinas,
       abrirMenu () {
         menuAbierto.value = !menuAbierto.value
       }

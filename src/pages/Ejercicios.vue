@@ -15,7 +15,7 @@
         no-data-label="No encontre nada para ti"
       >
         <template v-slot:top-right>
-          <q-input borderless dense debounce="100" v-model="filtroEjercicio" placeholder="Busqueda" @keyup.enter="busquedaEjercicio(1)" @keyup.delete="busquedaEjercicio(0)">
+          <q-input borderless dense debounce="100" v-model="filtroEjercicio" placeholder="Búsqueda" @keyup.enter="busquedaEjercicio(1)" @keyup.delete="busquedaEjercicio(0)">
           </q-input>
           <q-btn
           color="primary"
@@ -119,10 +119,10 @@ export default defineComponent({
         format: val => `${val}`,
         sortable: true
       },
-      { name: 'musculo', align: 'center', label: 'Musculo Principal', field: row => row.musculo, sortable: true },
-      { name: 'musculoS', align: 'center', label: 'Musculo Secundario', field: row => row.musculoS, sortable: true },
-      { name: 'equipamiento', align: 'center', label: 'Equipamiento', field: row => row.equipamiento, sortable: true },
-      { name: 'categoria', align: 'center', label: 'Categoria', field: row => row.categoria, sortable: true },
+      { name: 'musculo', align: 'center', label: 'Músculo Principal', field: row => row.musculo, sortable: false },
+      { name: 'musculoS', align: 'center', label: 'Músculo Secundario', field: row => row.musculoS, sortable: false },
+      { name: 'equipamiento', align: 'center', label: 'Equipamiento', field: row => row.equipamiento, sortable: false },
+      { name: 'categoria', align: 'center', label: 'Categoría', field: row => row.categoria, sortable: false },
       { name: 'estado', align: 'center', label: 'Estado', field: row => row.estado, sortable: true },
     ]
     const extra=()=>{

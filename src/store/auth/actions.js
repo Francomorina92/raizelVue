@@ -16,7 +16,7 @@ export const comprobar = async ({commit, dispatch}) => {
         commit('removeToken')
         localStorage.setItem('accessToken', '');
         localStorage.setItem('usuario', JSON.stringify({}));
-        commit('setMe', JSON.parse(usuario))
+        commit('setMe', {})
     }else{
         commit('setToken', token)
         commit('setMe', JSON.parse(usuario))

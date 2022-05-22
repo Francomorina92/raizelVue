@@ -6,6 +6,7 @@ import musculos from './musculos'
 import usuarios from './usuarios'
 import perfiles from './perfiles'
 import ejercicios from './ejercicios'
+import rutinas from './rutinas'
 import auth from './auth'
 // import example from './module-example'
 
@@ -27,6 +28,7 @@ export default store(function (/* { ssrContext } */) {
       usuarios: usuarios,
       perfiles: perfiles,
       ejercicios: ejercicios,
+      rutinas: rutinas,
       auth: auth
     },
 
