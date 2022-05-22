@@ -28,10 +28,10 @@
         </q-card-section>
 
         <q-card-actions vertical >
-          <q-btn color="primary" label="Iniciar Sesion" type="submit" class="w90 btn"/>
+          <q-btn color="primary" label="Iniciar Sesión" type="submit" class="w90 btn"/>
           <div class="text-center">
-            <label class="text-subtitle1 gris">¿No estas registrado? </label>
-            <label class="text-subtitle1 colorP" @click="registrarse">Registrate</label>
+            <label class="text-subtitle1 gris">¿No estás registrado? </label>
+            <label class="text-subtitle1 colorP" @click="registrarse">Regístrate</label>
           </div>
         </q-card-actions>
       </q-form>

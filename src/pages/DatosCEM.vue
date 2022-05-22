@@ -2,7 +2,7 @@
   <q-page class="flex flex-center">
     <div class="q-pa-md">
       <q-table
-        title="Categorias"
+        title="Categorías"
         :rows="categorias"
         :columns="columnsCategory"
         virtual-scroll
@@ -15,7 +15,7 @@
         no-data-label="No encontre nada para ti"
       >
         <template v-slot:top-right>
-          <q-input borderless dense debounce="100" v-model="filtroCategoria" placeholder="Busqueda" @keyup.enter="busquedaCategoria(1)" @keyup.delete="busquedaCategoria(0)">
+          <q-input borderless dense debounce="100" v-model="filtroCategoria" placeholder="Búsqueda" @keyup.enter="busquedaCategoria(1)" @keyup.delete="busquedaCategoria(0)">
           </q-input>
           <q-btn
           color="primary"
@@ -81,7 +81,7 @@
         no-data-label="No encontre nada para ti"
       >
         <template v-slot:top-right>
-          <q-input borderless dense debounce="100" v-model="filtroEquipamiento" placeholder="Busqueda" @keyup.enter="busquedaEquipamiento(1)" @keyup.delete="busquedaEquipamiento(0)">
+          <q-input borderless dense debounce="100" v-model="filtroEquipamiento" placeholder="Búsqueda" @keyup.enter="busquedaEquipamiento(1)" @keyup.delete="busquedaEquipamiento(0)">
           </q-input>
           <q-btn
             color="primary"
@@ -133,7 +133,7 @@
     </div>
     <div class="q-pa-md">
       <q-table
-        title="Musculos"
+        title="Músculos"
         :rows="musculos"
         :columns="columns"
         virtual-scroll
@@ -146,7 +146,7 @@
         no-data-label="No encontre nada para ti"
       >
         <template v-slot:top-right>
-          <q-input borderless dense debounce="100" v-model="filtroMusculo" placeholder="Busqueda" @keyup.enter="busquedaMusculo(1)" @keyup.delete="busquedaMusculo(0)">
+          <q-input borderless dense debounce="100" v-model="filtroMusculo" placeholder="Búsqueda" @keyup.enter="busquedaMusculo(1)" @keyup.delete="busquedaMusculo(0)">
           </q-input>
           <q-btn
             color="primary"

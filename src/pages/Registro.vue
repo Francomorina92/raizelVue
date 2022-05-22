@@ -45,7 +45,7 @@
 
 <script>
 import { useQuasar } from 'quasar'
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, computed } from 'vue'
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex'
 
@@ -61,7 +61,7 @@ export default defineComponent({
           myForm = ref(null),
           nombre = ref(''),
           password = ref('');
-
+    const error = computed(() => store.getters['usuarios/getError']);
     const validate= () => {
       myForm.value.validate().then(success => {
         if (success) {
@@ -98,11 +98,11 @@ export default defineComponent({
           const respuesta = await store.dispatch('usuarios/setUsuario',{email: email.value,nombre: nombre.value, password: password.value});
           if (!respuesta) {
             $q.notify({
-              timeout: 300,
+              timeout: 500,
               color: 'red-5',
               textColor: 'white',
               icon: 'warning',
-              message: 'Se produjo un error'
+              message: error.value[0].msg
             })            
           }
           else {

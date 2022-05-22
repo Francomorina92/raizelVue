@@ -15,7 +15,7 @@
         no-data-label="No encontre nada para ti"
       >
         <template v-slot:top-right>
-          <q-input borderless dense debounce="100" v-model="filtroUsuario" placeholder="Busqueda" @keyup.enter="busquedaUsuario(1)" @keyup.delete="busquedaUsuario(0)">
+          <q-input borderless dense debounce="100" v-model="filtroUsuario" placeholder="Búsqueda" @keyup.enter="busquedaUsuario(1)" @keyup.delete="busquedaUsuario(0)">
           </q-input>
           <q-btn
           color="primary"
