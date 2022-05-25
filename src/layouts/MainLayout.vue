@@ -26,7 +26,7 @@
       class="absolute"
     >
       <q-list >
-        <q-item clickable @click="linkPerfil()" v-if="user.rol">
+        <q-item clickable @click="linkPerfil()" v-if="user.rol && autenticado" >
           <q-item-section class="icono"
             avatar
           > 
@@ -39,7 +39,7 @@
           </q-item-section>                  
         </q-item>
         <!-- Ejercicios -->
-        <q-item clickable to="/ejercicios">
+        <q-item clickable to="/ejercicios" v-if="autenticado">
           <q-item-section class="icono"
             avatar
           > 
@@ -52,7 +52,7 @@
           </q-item-section>                  
         </q-item>
         <!-- Mis Rutinas -->
-        <q-item clickable @click="linkRutinas()">
+        <q-item clickable @click="linkRutinas()" v-if="autenticado">
           <q-item-section class="icono"
             avatar
           > 
@@ -64,12 +64,14 @@
           <q-item-section side>
           </q-item-section>                  
         </q-item>
+        <div v-if="autenticado">
         <EssentialLink
           v-for="link in linksList"
           :key="link.title"
           v-bind="link"
         />
-        <div class="cursor-pointer non-selectable" v-if="user && user.rol =='ADMIN_ROLE'">
+        </div>
+        <div class="cursor-pointer non-selectable" v-if="user && user.rol =='ADMIN_ROLE' && autenticado">
           <q-item
             clickable            
           >
@@ -108,7 +110,7 @@
         </div>
         <div class="fixed-bottom">
           <!-- Configuracion -->
-        <q-item clickable to="/configuracion">
+        <q-item clickable to="/configuracion" v-if="autenticado">
           <q-item-section class="icono"
             avatar
           > 
@@ -216,14 +218,6 @@ export default defineComponent({
     }
     const autenticado = computed(() => store.getters['auth/getAutenticado']);
     const user = computed(() => store.getters['auth/getMe']);
-    onMounted(()=>{
-      comprobar()
-    })
-    onUpdated(()=>{
-      if (rout.path != '/registro' && rout.path != '/login') {
-        comprobar()
-      }
-    })
           
 
     return {

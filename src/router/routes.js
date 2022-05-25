@@ -4,14 +4,15 @@ const routes = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '',name: 'index', component: () => import('pages/IndexPage.vue') },
-      { path: 'login', name:'login', component: () => import('pages/Login.vue') },
-      { path: 'registro', name:'registro', component: () => import('pages/Registro.vue') },
-      { path: 'datoscem', name:'datoscem', component: () => import('src/pages/DatosCEM.vue') },
-      { path: 'usuarios', name:'usuarios', component: () => import('src/pages/Usuarios.vue') },
-      { path: 'ejercicios', name:'ejercicios', component: () => import('src/pages/Ejercicios.vue') },
-      { path: 'rutinas/:id', name:'rutinas', component: () => import('src/pages/Rutinas.vue') },
-      { path: 'perfil/:id', name:'perfil', component: () => import('src/pages/Perfil.vue') },
+      { path: '',name: 'index', component: () => import('pages/IndexPage.vue') , meta:{ requireLogin: true} },
+      { path: 'login', name:'login', component: () => import('pages/Login.vue') , meta:{ requireLogin: false} },
+      { path: 'registro', name:'registro', component: () => import('pages/Registro.vue') , meta:{ requireLogin: false} },
+      { path: 'datoscem', name:'datoscem', component: () => import('src/pages/DatosCEM.vue'), meta:{ requireLogin: true} },
+      { path: 'usuarios', name:'usuarios', component: () => import('src/pages/Usuarios.vue') , meta:{ requireLogin: true} },
+      { path: 'ejercicios', name:'ejercicios', component: () => import('src/pages/Ejercicios.vue') , meta:{ requireLogin: true} },
+      { path: 'rutinas/:id', name:'rutinas', component: () => import('src/pages/Rutinas.vue') , meta:{ requireLogin: true} },
+      { path: 'perfil/:id', name:'perfil', component: () => import('src/pages/Perfil.vue') , meta:{ requireLogin: true} },
+      { path: 'confirmacion/:token', name:'confirmacion', component: () => import('src/pages/Confirmacion.vue') , meta:{ requireLogin: false} },
     ]
   },
 

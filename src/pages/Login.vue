@@ -66,9 +66,14 @@ export default defineComponent({
     }
     const onSubmit = async() => {
         try {
+          $q.loading.show({
+            delay: 400
+          })
           const respuesta = await store.dispatch('auth/login',{email: email.value, password: password.value});
+          $q.loading.hide()
           route.push('/');
         } catch (error) {
+          $q.loading.hide()
           if (error.response.data.msg) {
             $q.notify({
               timeout: 400,

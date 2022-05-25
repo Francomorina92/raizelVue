@@ -10,5 +10,8 @@ export const removeToken = (state, token) => {
 export const setMe = (state, me) => {
     state.me = me
 }
+export const setError = (state, error) => {
+    state.error = error
+}
 
 
