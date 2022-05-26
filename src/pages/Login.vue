@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex flex-center">
-    <q-card class="my-card ancho" >
+    <q-card class="my-card ancho" v-if="!recuperar">
       <q-form
         @submit="onSubmit"
         class="q-gutter-md"
@@ -33,6 +33,34 @@
             <label class="text-subtitle1 gris">¿No estás registrado? </label>
             <label class="text-subtitle1 colorP" @click="registrarse">Regístrate</label>
           </div>
+          <div class="text-center">
+            <label class="text-subtitle1 gris">¿Olvidaste tu contraseña? </label>
+            <label class="text-subtitle1 colorP" @click="recuperarPassword(true)">Recuperar contraseña</label>
+          </div>
+        </q-card-actions>
+      </q-form>
+    </q-card>
+    <q-card class="my-card ancho" v-else>
+      <q-form
+        @submit="onSubmitPassword"
+        class="q-gutter-md"
+      >
+        <q-card-section>
+          <div class="text-h6 text-center gris">Recuperar Contraseña</div>
+        </q-card-section>
+
+        <q-separator />
+        <q-card-section >
+          <q-input v-model="email" label="Email" placeholder="Inserte su Email" type="email" :dense="true" class="w90 gris"
+          :rules="[ val => !!val || 'Por favor escriba algo', val => validarEmail(val) || 'Por favor escriba un email real' ]"/>
+        </q-card-section>
+
+        <q-card-actions vertical >
+          <q-btn color="primary" label="Recuperar" type="submit" class="w90 btn"/>
+          <div class="text-center">
+            <label class="text-subtitle1 gris">¿Recuerdas la clave? </label>
+            <label class="text-subtitle1 colorP" @click="recuperarPassword(false)">Inicia Sesión</label>
+          </div>
         </q-card-actions>
       </q-form>
     </q-card>
@@ -42,20 +70,22 @@
 <script>
 import { useQuasar } from 'quasar'
 import { defineComponent, ref } from 'vue'
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'Login',
   setup(){
-    const route = useRouter(),
+    const router = useRouter(),
+          route = useRouter(),
           store = useStore(),
           $q = useQuasar(),
           email = ref(''),
           isPwd= ref(true),
+          recuperar= ref(false),
           password = ref('');
     const registrarse=()=>{
-      route.replace({name:'registro'});
+      router.replace({name:'registro'});
     }
     const validarEmail = (value) => {
       const emailRegex=/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -65,32 +95,61 @@ export default defineComponent({
       return false;
     }
     const onSubmit = async() => {
-        try {
-          $q.loading.show({
-            delay: 400
+      try {
+        $q.loading.show({
+          delay: 400
+        })
+        const respuesta = await store.dispatch('auth/login',{email: email.value, password: password.value});
+        $q.loading.hide()
+        router.push('/');
+      } catch (error) {
+        $q.loading.hide()
+        if (error.response.data.msg) {
+          $q.notify({
+            timeout: 400,
+            color: 'red-5',
+            textColor: 'white',
+            icon: 'warning',
+            message: error.response.data.msg
           })
-          const respuesta = await store.dispatch('auth/login',{email: email.value, password: password.value});
-          $q.loading.hide()
-          route.push('/');
-        } catch (error) {
-          $q.loading.hide()
-          if (error.response.data.msg) {
-            $q.notify({
-              timeout: 400,
-              color: 'red-5',
-              textColor: 'white',
-              icon: 'warning',
-              message: error.response.data.msg
-            })
-          }          
-        }
-      
+        }          
       }
+    
+    }
+    const onSubmitPassword = async() => {
+      try {
+        $q.loading.show({
+          delay: 400
+        })
+        const respuesta = await store.dispatch('auth/recuperar',{email: email.value});
+        $q.loading.hide()
+        recuperar.value = false;
+        router.push('/');
+      } catch (error) {
+        $q.loading.hide()
+        if (error.response.data.msg) {
+          $q.notify({
+            timeout: 400,
+            color: 'red-5',
+            textColor: 'white',
+            icon: 'warning',
+            message: error.response.data.msg
+          })
+        }          
+      }
+    
+    }
+    const recuperarPassword=(valor)=>{
+      recuperar.value = valor;
+    }
     return{
       email,
       isPwd,
       password,
+      recuperar,
+      recuperarPassword,
       onSubmit,
+      onSubmitPassword,
       registrarse,
       validarEmail
     }

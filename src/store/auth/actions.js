@@ -31,6 +31,22 @@ export const confirmar = async ({commit}, objeto) => {
         commit('setError', ex.response.data )
     }
 }
+export const cambiarPassword = async ({commit}, objeto) => {
+    try {
+        commit('setError', null )
+        await api.post('/auth/cambiarPassword',objeto)
+    } catch (ex) {
+        commit('setError', ex.response.data )
+    }
+}
+export const recuperar = async ({commit}, objeto) => {
+    try {
+        commit('setError', null )
+        await api.post('/auth/recuperar',objeto)
+    } catch (ex) {
+        commit('setError', ex.response.data )
+    }
+}
 export const singOut = async ({commit}) => {
     api.defaults.headers.common.accessToken = ''
     localStorage.setItem('accessToken', '');

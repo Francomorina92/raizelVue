@@ -13,6 +13,7 @@ const routes = [
       { path: 'rutinas/:id', name:'rutinas', component: () => import('src/pages/Rutinas.vue') , meta:{ requireLogin: true} },
       { path: 'perfil/:id', name:'perfil', component: () => import('src/pages/Perfil.vue') , meta:{ requireLogin: true} },
       { path: 'confirmacion/:token', name:'confirmacion', component: () => import('src/pages/Confirmacion.vue') , meta:{ requireLogin: false} },
+      { path: 'recuperacion/:token', name:'recuperacion', component: () => import('src/pages/Recuperacion.vue') , meta:{ requireLogin: false} },
     ]
   },
 
