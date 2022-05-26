@@ -31,9 +31,10 @@
         </q-card-section>
 
         <q-card-actions vertical class="paddingTop0 marginTop0">
-          <q-toggle v-model="accept" label="Aceptar los términos" class="w90 btn">
+          <div class="flex w90 center">
+            <q-toggle v-model="accept" label="Aceptar los términos" class=" btn"/>
             <q-icon color="primary" name="fa-solid fa-file-invoice" class="q-ml-sm" @click="terminos()"/>
-          </q-toggle>
+          </div>
           <q-btn color="primary" label="Registrate" class="w90 btn" type="submit"/>
           <div class="text-center">
             <label class="text-subtitle1 gris">¿Ya estas registrado? </label>
@@ -177,6 +178,9 @@ export default defineComponent({
 })
 </script>
 <style scoped>
+.center{
+  align-items: center;
+}
 span{
   font-weight: bold;
 }
