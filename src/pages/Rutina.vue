@@ -25,7 +25,8 @@
               icon-selected="favorite"
               icon-half="favorite"
               no-dimming
-              @click="darLike()"
+              @click="darLike"
+              v-if="user.id != perfil.idUsuario"
             />
         </div>
       </div>
@@ -112,7 +113,7 @@ export default defineComponent({
       fetchPerfil();      
     }
     const darLike = async() =>{
-      await store.dispatch('perfiles/setMeGusta',{rutina: route.params.id, perfil: perfil.value.id, like: meGusta.value == 1 ? false : true});
+      await store.dispatch('perfiles/setMeGusta',{idRutina: route.params.id, idPerfil: perfil.value.id, like: meGusta.value == 1 ? true : false});
       meGusta.value = like.value ? 1 : 0;
     }
     
@@ -148,7 +149,6 @@ export default defineComponent({
     }
   
     const verEjercicio = (valor) => {
-      debugger;
       show.value = false;
       objeto.value = {};
       detalleE.value = detallesR.value.find( detalle => detalle.id === valor )

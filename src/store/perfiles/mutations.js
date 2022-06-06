@@ -4,7 +4,6 @@ export default{
         state.isLoading = false
     },
     setMeGusta : ( state, like ) => {
-        debugger;
         state.like = like
         state.isLoading = false
     },

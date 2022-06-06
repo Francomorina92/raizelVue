@@ -28,9 +28,8 @@ export default {
     },
     async setMeGusta({ commit },objeto) {
         try {
-            debugger;
             commit('setLoading', true )
-            const {data} = await api.post(`/likes/megusta`, objeto)
+            const {data} = await api.post(`/likes`, objeto)
             commit('setMeGusta', data )
         } catch (error) {
             commit('setError', error )
