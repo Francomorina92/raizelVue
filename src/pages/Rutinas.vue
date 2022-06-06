@@ -24,10 +24,12 @@
         <create  :objeto="objeto" :accion="accion" class="tabla"></create>
       </div>
       <div class="flex justify-center">
-        <rutina v-for="{id, nombre, calificacion} in rutinas" :key="id" 
+        <rutina v-for="{id, nombre, calificacion, tiempo} in rutinas" :key="id" 
         :nombre="nombre"
         :calificacion="calificacion"
-        class="q-ma-md"></rutina>
+        :tiempo="tiempo"
+        class="q-ma-md"
+        @click="verRutina(id)"></rutina>
       </div>
     </div>
     
@@ -38,7 +40,7 @@
 <script>
 import {  useQuasar } from 'quasar'
 import { defineComponent, ref, computed, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex'
 
 import Create from '../components/Create.vue';
@@ -50,6 +52,7 @@ export default defineComponent({
   name: 'Rutinas',
   setup(){
     const route = useRoute(),
+          router = useRouter(),
           store = useStore(),
           $q = useQuasar(),
           objeto = ref({}),
@@ -73,6 +76,9 @@ export default defineComponent({
         await store.dispatch('usuarios/resetUsuarios');
         fetchRutinas();
       }
+    }
+    const verRutina = (valor) =>{
+      router.push('/rutina/'+valor);
     }
     onMounted(()=> 
       extra(),
@@ -111,6 +117,7 @@ export default defineComponent({
       loadingU,
       objeto,
       show,
+      verRutina,
       fetchRutinas,
       busquedaUsuario,
       crear,

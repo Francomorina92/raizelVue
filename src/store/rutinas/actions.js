@@ -66,6 +66,55 @@ export default {
         }finally{
             commit('setLoading', false )
         }
-    }
+    },
+    async setDetalle({ commit },objeto) {
+        try {
+            commit('setLoading', true )
+            debugger;
+            const {data} = await api.post('/rutinas/detalle',objeto)
+            if ( !data ){
+                return
+            }
+            commit('setDetalle', data )
+            return data;
+        } catch (ex) {
+            commit('setError', ex.response.data.errors )
+        }finally{
+            commit('setLoading', false )
+        }        
+    },
+    async loadDetalles({ commit },objeto) {
+        try {
+            commit('setLoading', true )
+            const {data} = await api.get(`/rutinas/detalles`,{params:{rutina: objeto.id}})
+            commit('setDetalle', data )
+        } catch (error) {
+            commit('setError', error )
+        }finally{
+            commit('setLoading', false )
+        }        
+    },
+    async resetDetalles({ commit }) {
+        try {
+            commit('setLoading', true )
+            commit('resetDetalles')
+        } catch (ex) {
+            commit('setError', ex.response.data.errors )
+        }finally{
+            commit('setLoading', false )
+        }
+    },
+    async loadRutina({ commit },objeto) {
+        try {
+            commit('setLoading', true )
+            const {data} = await api.get(`/rutinas/${objeto.id}`)        
+            commit('setRutina', data[0] )
+        } catch (error) {
+            commit('setError', error )
+        }finally{
+            commit('setLoading', false )
+        }        
+    },
 }
+
 

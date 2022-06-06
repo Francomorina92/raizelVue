@@ -2,6 +2,9 @@ export default {
     getRutinas: ( state ) => {
         return state.rutinas
     },
+    getDetalles: ( state ) => {
+        return state.detalles
+    },
     getPerfil: ( state ) => {
         return state.perfil
     },
@@ -10,6 +13,9 @@ export default {
     },
     getError:( state ) => {
         return state.error
-    }
+    },
+    getRutina: ( state ) => {
+        return state.rutina
+    },
 }
 

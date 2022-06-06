@@ -44,7 +44,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { useStore } from 'vuex'
 
 export default defineComponent({
-  name: 'Login',
+  name: 'Recuperacion',
   setup(){
     const router = useRouter(),
           route = useRoute(),

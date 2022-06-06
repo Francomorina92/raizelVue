@@ -10,7 +10,7 @@
           no-caps
           unelevated
           @click="editar()"
-          v-if="user.id == perfil.id && !edit"
+          v-if="user.id == perfil.idUsuario && !edit"
         />
         <q-btn
           color="primary"
@@ -19,7 +19,7 @@
           no-caps
           unelevated
           @click="guardar()"
-          v-if="user.id == perfil.id && edit"
+          v-if="user.id == perfil.idUsuario && edit"
         />
         <q-btn
           color="negative"
@@ -28,7 +28,7 @@
           no-caps
           unelevated
           @click="cancelar()"
-          v-if="user.id == perfil.id && edit"
+          v-if="user.id == perfil.idUsuario && edit"
         />
         <img src="~assets/user.svg" class="img" >
 

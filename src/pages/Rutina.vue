@@ -1,109 +1,57 @@
 <template>
-  <q-page class="flex flex-center">
+  <q-page class="flex column">
     <div class="q-pa-md">
-      <q-table
-        title="Ejercicios"
-        :rows="ejercicios"
-        :columns="columnsEjercicio"
-        virtual-scroll
-        :loading="loadingE"
-        :rows-per-page-options="[0]"
-        :filter="filtroEjercicio"
-        style="height: 410px; overflow-y:hidden"
-        row-key="name"
-        class="tabla encabezadoFijo"
-        no-data-label="No encontre nada para ti"
-      >
-        <template v-slot:top-right>
-          <q-input borderless dense debounce="100" v-model="filtroEjercicio" placeholder="Búsqueda" @keyup.enter="busquedaEjercicio(1)" @keyup.delete="busquedaEjercicio(0)">
-          </q-input>
+      <div class="flex row items-center">
+        <h1 class="text-h3 h3">{{rutina.nombre}}</h1>
+        <div>
           <q-btn
-          color="primary"
-          icon-right="archive"
-          label="Exportar"
-          no-caps
-          unelevated
-          @click="exportarTable('ejercicio')"
-          />
-          <q-btn
-          class="plus"
-          size="12px"
-          color="primary"
-          round
-          unelevated
-          icon="fa-solid fa-plus"
-          @click="crear('Ejercicio')"
-          />
-        
-        </template>
-        <template v-slot:body="props">
-          <q-tr :props="props" @click="editar(props.row.id,'Ejercicio')">
-            <q-td key="nombre" :props="props">
-              {{ props.row.nombre.length > 20 ? props.row.nombre.substr(0,20) + '...' : props.row.nombre  }}
-            </q-td>
-            <q-td key="musculo" :props="props">
-              {{ musculoFiltro(props.row.idMusculoPrincipal) > 20 ? musculoFiltro(props.row.idMusculoPrincipal) + '...' : musculoFiltro(props.row.idMusculoPrincipal) }}
-            </q-td>
-            <q-td key="musculoS" :props="props">
-              {{ musculoFiltro(props.row.idMusculoSecundario) > 20 ? musculoFiltro(props.row.idMusculoSecundario) + '...' : musculoFiltro(props.row.idMusculoSecundario)  }}
-            </q-td>
-            <q-td key="equipamiento" :props="props">
-              {{ equipamientoFiltro(props.row.idEquipamiento) > 20 ? equipamientoFiltro(props.row.idEquipamiento) + '...' : equipamientoFiltro(props.row.idEquipamiento)  }}
-            </q-td>
-            <q-td key="categoria" :props="props">
-              {{ categoriaFiltro(props.row.idCategoria) > 20 ? categoriaFiltro(props.row.idCategoria) + '...' : categoriaFiltro(props.row.idCategoria)  }}
-            </q-td>
-            <q-td key="estado" :props="props">
-              {{ props.row.estado ? 'Activado' : 'Desactivado' }}
-            </q-td>
-          </q-tr>
-        </template>
-        <template v-slot:bottom>
-          <div v-if="respuestaE" class="verMas">
-            <q-btn 
-            flat
-            color="primary"
-            icon-right="fa-solid fa-circle-arrow-down"
-            label="Ver mas"
-            no-caps
-            unelevated
-            @click="fetchEjercicios()"
-            />
-          </div>
-        </template>
-        <template v-slot:loading>
-          <q-inner-loading showing color="primary" />
-        </template>
-      </q-table>
+              class="plus q-ml-md"
+              size="12px"
+              color="primary"
+              round
+              unelevated
+              icon="fa-solid fa-plus"
+              @click="crear()"
+              />
+        </div>
+      </div>
     </div>
-    <div v-if="!show" class="q-pa-md tabla">
-      <q-card class="my-card tabla" >
-
-      </q-card>
+   
+    <div v-if="show" class="q-pa-md">
+      <create  :objeto="objeto" :objetoE="detalleE" :isRutina="true" :ejercicios="ejercicios" :categorias="categorias" :musculos="musculos" :equipamientos="equipamientos" :accion="accion" class="tabla"></create>
     </div>
-    <div v-else class="q-pa-md">
-      <create  :objeto="objeto" :categorias="categorias" :musculos="musculos" :equipamientos="equipamientos" :accion="accion" class="tabla"></create>
-    </div>
+    <div class="flex">
+        <detalle v-for="{id, nombre, musculoPrincipal, musculoSecundario, tiempo} in detallesR" :key="id"  
+        :nombre="nombre"
+        :musculoPrincipal="musculoPrincipal"
+        :musculoSecundario="musculoSecundario"
+        :tiempo="tiempo"
+        :imagen="imagen"        
+        class="q-ma-md detalle"
+        @click="verEjercicio(id)"
+        ></detalle>
+      </div>
   </q-page>
 </template>
 
 <script>
 import {  exportFile, useQuasar } from 'quasar'
 import { defineComponent, ref, computed, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { useStore } from 'vuex'
-
+import Detalle  from '../components/Detalle.vue';
 import Create from '../components/CreateEjercicio.vue';
 
 
 export default defineComponent({
-  components: { Create },
-  name: 'Ejercicios',
+  components: { Create, Detalle },
+  name: 'Rutina',
   setup(){
-    const route = useRouter(),
+    const route = useRoute(),
           store = useStore(),
           $q = useQuasar(),
           objeto = ref({}),
+          detalleE = ref({}),
           accion = ref(),
           filtroEjercicio = ref(''),
           show = ref(false);
@@ -130,16 +78,14 @@ export default defineComponent({
     }
     const fetchEjercicios = async()=>{
       const fromEjercicio = computed(() => store.getters['ejercicios/getFrom']);
-      await store.dispatch('ejercicios/loadEjercicios',{limite:11,desde:fromEjercicio.value,filtro:filtroEjercicio.value});
+      await store.dispatch('ejercicios/loadEjercicios',{limite:100,desde:fromEjercicio.value});
     }
-    const busquedaEjercicio = async(tecla)=>{
-      if (tecla==0 && filtroEjercicio.value.length==1) {
-        filtroEjercicio.value='';
-      }
-      if (tecla==1||filtroEjercicio.value.length==0) {
-        await store.dispatch('ejercicios/resetEjercicios');
-        fetchEjercicios();
-      }
+    const fetchDetalles = async()=>{
+      await store.dispatch('rutinas/resetDetalles');
+      await store.dispatch('rutinas/loadDetalles',{limite:100,desde:0, id: route.params.id});
+    }
+    const fetchRutina = async()=>{
+      await store.dispatch('rutinas/loadRutina',{id: route.params.id});
     }
     
     const fetchMusculos = async()=>{
@@ -155,6 +101,8 @@ export default defineComponent({
       Promise.all([fetchMusculos(),fetchEquipamientos(),fetchCategorias()])
       .then(()=>{
         fetchEjercicios();
+        fetchDetalles();
+        fetchRutina();
       })
       .catch(()=>{
         console.log('error');
@@ -164,35 +112,27 @@ export default defineComponent({
       extra(),
       fetchDatos()
     );
-    const categoriaFiltro = (categoria)=>{
-      const cat = categorias.value.filter(c => c.id == categoria);
-      return cat[0].nombre
-    }
-    const musculoFiltro = (musculo)=>{
-      const mus = musculos.value.filter(m => m.id == musculo);
-      return mus[0].nombre
-    }
-    const equipamientoFiltro = (equipamiento)=>{
-      const equi = equipamientos.value.filter(m => m.id == equipamiento);
-      return equi[0].nombre
-    }
-    const crear = (t) => {
+    const crear = () => {
       show.value = false;
       objeto.value = {};
-      objeto.value={tipo:t}
       accion.value='C';
       show.value = true;
     }
   
-    const editar= (objetoId,t) => {
+    const verEjercicio = (valor) => {
+      debugger;
       show.value = false;
       objeto.value = {};
-      const {id, nombre, detalles, preparacion, ejecucion, estado, idMusculoPrincipal, idMusculoSecundario, idEquipamiento,idCategoria, tiempo} = ejercicios.value.find( ejercicio => ejercicio.id === objetoId )
-      objeto.value = {id,nombre, detalles, preparacion, ejecucion, estado, idMusculoPrincipal, idMusculoSecundario, idEquipamiento, idCategoria, tipo : t, tiempo};
+      detalleE.value = detallesR.value.find( detalle => detalle.id === valor )
+      const {id, nombre, detalles, preparacion, ejecucion, estado, idMusculoPrincipal, idMusculoSecundario, idEquipamiento,idCategoria} = ejercicios.value.find( ejercicio => ejercicio.id === detalleE.value.idEjercicio )
+      objeto.value = {id,nombre, detalles, preparacion, ejecucion, estado, idMusculoPrincipal, idMusculoSecundario, idEquipamiento, idCategoria, tipo : t};
+      
       accion.value='E';
       show.value = true;
     }
     const ejercicios = computed(() => store.getters['ejercicios/getEjercicios']);
+    const rutina = computed(() => store.getters['rutinas/getRutina']);
+    const detallesR = computed(() => store.getters['rutinas/getDetalles']);
     const respuestaE = computed(() => store.getters['ejercicios/getRespuesta']);
     const loadingE = computed(() => store.getters['ejercicios/getLoading']);
     const categorias = computed(() => store.getters['categorias/getCategorias']);
@@ -250,6 +190,7 @@ export default defineComponent({
     return{
       accion,
       categorias,
+      detallesR,
       equipamientos,
       musculos,
       filtroEjercicio,
@@ -259,14 +200,12 @@ export default defineComponent({
       columnsEjercicio,
       objeto,
       show,
-      categoriaFiltro,
-      musculoFiltro,
-      equipamientoFiltro,
+      verEjercicio,
       fetchEjercicios,
-      busquedaEjercicio,
       crear,
-      editar,
-      exportarTable
+      exportarTable,
+      detalleE,
+      rutina
     }
   }
 })
@@ -293,5 +232,8 @@ export default defineComponent({
 }
 .plus{
   margin-left: 15px;
+}
+.detalle{
+  max-height: 300px;
 }
 </style>

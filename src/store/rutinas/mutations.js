@@ -26,5 +26,18 @@ export default{
     },
     setError : ( state, error ) => {
         state.error = error
-    }
+    },
+    setDetalle : ( state, detalle ) => {
+        state.detalles = [ ...state.detalles, detalle ]
+        state.isLoading = false
+    },
+    resetDetalles : ( state ) => {
+        state.isLoading= false,
+        state.detalles= [],
+        state.error= null
+    },
+    setRutina : ( state, rutina ) => {
+        state.rutina = rutina
+        state.isLoading = false
+    },
 }
