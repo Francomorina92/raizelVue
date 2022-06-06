@@ -40,4 +40,15 @@ export default{
         state.rutina = rutina
         state.isLoading = false
     },
+    editDetalle : ( state, detalle ) => {
+        const detalles = state.detalles.map(function (x) {
+            if (x.id==detalle.id) {
+                return detalle                
+            }else{
+                return x
+            }
+        });
+        state.detalles = [ ...detalles]
+        state.isLoading = false
+    },
 }

@@ -83,11 +83,27 @@ export default {
             commit('setLoading', false )
         }        
     },
+    async editDetalle({ commit },objeto) {
+        try {
+            commit('setLoading', true )
+            debugger;
+            const {data} = await api.put(`/rutinas/detalles/${objeto.id}`,objeto)
+            if ( !data ){
+                return
+            }
+            commit('editDetalle', data )
+            return data;
+        } catch (ex) {
+            commit('setError', ex.response.data.errors )
+        }finally{
+            commit('setLoading', false )
+        }        
+    },
     async loadDetalles({ commit },objeto) {
         try {
             commit('setLoading', true )
             const {data} = await api.get(`/rutinas/detalles`,{params:{rutina: objeto.id}})
-            commit('setDetalle', data )
+            commit('setDetalle', data[0] )
         } catch (error) {
             commit('setError', error )
         }finally{
