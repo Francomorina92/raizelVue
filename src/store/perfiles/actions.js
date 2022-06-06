@@ -4,8 +4,9 @@ import { date } from 'quasar'
 export default {
     async loadPerfil({ commit },objeto) {
         try {
+            debugger;
             commit('setLoading', true )
-            const {data} = await api.get(`/perfiles/${objeto.id}`,)
+            const {data} = await api.get(`/perfiles/${objeto.id}`)
         
             commit('setPerfil', data )
         } catch (error) {

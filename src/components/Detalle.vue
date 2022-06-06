@@ -1,7 +1,7 @@
 <template>
   <q-card class="my-card">
       <q-img :src="imagen != '' ? imagen : 'https://cdn.quasar.dev/img/chicken-salad.jpg'" />
-
+  
       <q-card-section>
         <div class="row no-wrap items-center">
           <div class="col text-h6 ellipsis">
@@ -12,8 +12,6 @@
             {{tiempoR}}m
           </div>
         </div>
-
-        <q-rating readonly v-model="calificacionR" :max="5"  size="32px" color="orange" v-if="calificacionR"/>
       </q-card-section>
 
       <q-card-section class="q-pt-none" v-if="musculoPrincipalR">
@@ -22,6 +20,14 @@
         </div>
         <div class="text-caption text-grey">
           {{musculoPrincipalR}}
+        </div>
+      </q-card-section>
+      <q-card-section class="q-pt-none" v-if="musculoSecundarioR">
+        <div class="text-subtitle1">
+          Musculo Secundario
+        </div>
+        <div class="text-caption text-grey">
+          {{musculoSecundarioR}}
         </div>
       </q-card-section>
     </q-card>
@@ -33,19 +39,19 @@ import { defineComponent, ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex'
 export default defineComponent({
-    name: 'Rutinas',
-    props:{
-        calificacion: {
-            type: String, default: '0'
-        },
+    name: 'Detalle',
+    props:{        
         musculoPrincipal:{
+            type: String, default: ''
+        },
+        musculoSecundario:{
             type: String, default: ''
         },
         nombre: {
             type: String, default: 'C'
         },
         tiempo: {
-            type: String, default: '0'
+            type: Number, default: 0
         },
         imagen: {
             type: String, default: ''
@@ -55,18 +61,16 @@ export default defineComponent({
         const $q = useQuasar(),
               store = useStore();
         let nombreR= ref(props.nombre),
-            tiempoR= ref(props.tiempo ? props.tiempo : 0),
+            tiempoR= ref(props.tiempo),
             calificacionR= ref(props.calificacion * 5),
-            musculoPrincipalR= ref(props.musculoPrincipal);
-        const valorCalificacion = (v) => {
-            return v*5;
-        }
+            musculoPrincipalR= ref(props.musculoPrincipal),
+            musculoSecundarioR= ref(props.musculoSecundario);
         return{
-            valorCalificacion,
             nombreR,
             tiempoR,
             calificacionR,
-            musculoPrincipalR
+            musculoPrincipalR,
+            musculoSecundarioR
         }
     }
 })

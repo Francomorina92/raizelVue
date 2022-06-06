@@ -92,7 +92,7 @@ import Create from '../components/CreateUsuario.vue';
 
 export default defineComponent({
   components: { Create },
-  name: 'DatosCEM',
+  name: 'Usuarios',
   setup(){
     const route = useRouter(),
           store = useStore(),
