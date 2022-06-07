@@ -6,7 +6,7 @@
         ref="myForm"
       >
         <!-- Seleccionar ejercicio -->
-        <div v-if="show">
+        <div v-if="show && objetoE == {} ">
           <q-card-section>
             <div class="text-h6 text-center gris">Seleccione un ejercicio</div>            
           </q-card-section>
@@ -248,20 +248,22 @@ export default {
             nombre= ref(props.objeto.nombre),
             show= ref(props.isRutina),
             preparacion= ref(props.objeto.preparacion);
+
         let numeroSerie= ref(props.objetoE.numeroSerie ? props.objetoE.numeroSerie : 1),
             descansoSerie= ref(props.objetoE.descansoSerie ? props.objetoE.descansoSerie : 0),
             tipoSerie= ref(props.objetoE.tipoSerie ? props.objetoE.tipoSerie : 1),
             observaciones= ref(props.objetoE.observaciones ? props.objetoE.observaciones : ''),
             unidadTiempo= ref(props.objetoE.unidadTiempo ? props.objetoE.unidadTiempo : 1);
-        let repUno= ref(props.objetoE.repUno ? props.objetoE.repUno : null),
+
+        let repUno= ref(props.objetoE.repeticionesUno ? props.objetoE.repeticionesUno : null),
             cargaUno= ref(props.objetoE.cargaUno ? props.objetoE.cargaUno : null),
-            repDos= ref(props.objetoE.repDos ? props.objetoE.repDos : null),
+            repDos= ref(props.objetoE.repeticionesDos ? props.objetoE.repeticionesDos : null),
             cargaDos= ref(props.objetoE.cargaDos ? props.objetoE.cargaDos : null),
-            repTres= ref(props.objetoE.repTres ? props.objetoE.repTres : null),
+            repTres= ref(props.objetoE.repeticionesTres ? props.objetoE.repeticionesTres : null),
             cargaTres= ref(props.objetoE.cargaTres ? props.objetoE.cargaTres : null),
-            repCuatro= ref(props.objetoE.repCuatro ? props.objetoE.repCuatro : null),
+            repCuatro= ref(props.objetoE.repeticionesCuatro ? props.objetoE.repeticionesCuatro : null),
             cargaCuatro= ref(props.objetoE.cargaCuatro ? props.objetoE.cargaCuatro : null),
-            repCinco= ref(props.objetoE.repCinco ? props.objetoE.repCinco : null),
+            repCinco= ref(props.objetoE.repeticionesCinco ? props.objetoE.repeticionesCinco : null),
             cargaCinco= ref(props.objetoE.cargaCinco ? props.objetoE.cargaCinco : null);
 
         const onSubmit =async () => {
@@ -286,7 +288,8 @@ export default {
                 cargaCinco: cargaCinco.value,
                 unidad: unidadTiempo.value,
                 observaciones: observaciones.value
-              })
+              });
+              reset();
             }else{
               respuesta = await store.dispatch('ejercicios/setEjercicio',{
                 detalles: detalles.value,
@@ -324,22 +327,47 @@ export default {
               })
             }  
           }else if (props.accion=='E') {
+            if (props.isRutina) {
+                respuesta = await store.dispatch('rutinas/editDetalle',{
+                  id: props.objetoE.id,
+                  idRutina: route.params.id,
+                  idEjercicio: idEjercicio.value,
+                  tipoSerie: tipoSerie.value,
+                  cantidadSerie: numeroSerie.value,
+                  descanso: descansoSerie.value,
+                  repeticionesUno: repUno.value,
+                  repeticionesDos: repDos.value,
+                  repeticionesTres: repTres.value,
+                  repeticionesCuatro: repCuatro.value,
+                  repeticionesCinco: repCinco.value,
+                  cargaUno: cargaUno.value,
+                  cargaDos: cargaDos.value,
+                  cargaTres: cargaTres.value,
+                  cargaCuatro: cargaCuatro.value,
+                  cargaCinco: cargaCinco.value,
+                  unidad: unidadTiempo.value,
+                  observaciones: observaciones.value
+                });
+                reset();
+            }
+            else{
+              respuesta = await store.dispatch('ejercicios/editEjercicio',{
+                id: props.objeto.id,
+                detalles: detalles.value,
+                ejecucion: ejecucion.value,
+                estado: estado.value,
+                idCategoria: idCategoria.value,
+                idEquipamiento: idEquipamiento.value,
+                idMusculoPrincipal: idMusculoPrincipal.value,
+                idMusculoSecundario: idMusculoSecundario.value,
+                tiempo: tiempo.value,
+                nombre: nombre.value,
+                preparacion: preparacion.value,
+                idPerfil: 2 //corregir esto luego con login
+              });
+              reset();
+            }
             
-            respuesta = await store.dispatch('ejercicios/editEjercicio',{
-              id: props.objeto.id,
-              detalles: detalles.value,
-              ejecucion: ejecucion.value,
-              estado: estado.value,
-              idCategoria: idCategoria.value,
-              idEquipamiento: idEquipamiento.value,
-              idMusculoPrincipal: idMusculoPrincipal.value,
-              idMusculoSecundario: idMusculoSecundario.value,
-              tiempo: tiempo.value,
-              nombre: nombre.value,
-              preparacion: preparacion.value,
-              idPerfil: 2 //corregir esto luego con login
-            });
-            reset();
             
             if (!respuesta) {
               $q.notify({

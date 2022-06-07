@@ -184,7 +184,7 @@ export default defineComponent({
       {
         title: 'Buscar Rutinas',
         icon: 'fa-solid fa-magnifying-glass',
-        link: 'https://github.com/quasarframework'
+        link: '/'
       },
       {
         title: 'Estadísticas',

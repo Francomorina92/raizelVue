@@ -2,6 +2,9 @@ export default {
     getRutinas: ( state ) => {
         return state.rutinas
     },
+    getRutinasFavoritas: ( state ) => {
+        return state.rutinasFavoritas
+    },
     getDetalles: ( state ) => {
         return state.detalles
     },

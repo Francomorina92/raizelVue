@@ -3,6 +3,10 @@ export default{
         state.perfil = perfil
         state.isLoading = false
     },
+    setMeGusta : ( state, like ) => {
+        state.like = like
+        state.isLoading = false
+    },
     editPerfil : ( state, perfil ) => {
         state.perfil = perfil
         state.isLoading = false

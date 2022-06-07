@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex">
-    <div class="q-pa-md">
+    <div class="q-pa-md completo">
       <div class="flex row items-center">
         <h1 class="text-h3 h3">Mis Rutinas</h1>
         <div>
@@ -130,5 +130,8 @@ export default defineComponent({
 .tabla{
   min-width: 400px;
   max-width: 650px;
+}
+.completo{
+  width: 100%;
 }
 </style>

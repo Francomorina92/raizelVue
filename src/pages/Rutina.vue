@@ -5,14 +5,29 @@
         <h1 class="text-h3 h3">{{rutina.nombre}}</h1>
         <div>
           <q-btn
-              class="plus q-ml-md"
-              size="12px"
+            class="plus q-ml-md"
+            size="12px"
+            color="primary"
+            round
+            unelevated
+            icon="fa-solid fa-plus"
+            @click="crear()"
+            v-if="user.id == perfil.idUsuario"
+            />
+            <q-rating
+              v-model="meGusta"
+              max="1"
+              size="3em"
               color="primary"
-              round
-              unelevated
-              icon="fa-solid fa-plus"
-              @click="crear()"
-              />
+              color-selected="primary"
+              class="q-ml-md"
+              icon="favorite_border"
+              icon-selected="favorite"
+              icon-half="favorite"
+              no-dimming
+              @click="darLike"
+              v-if="user.id != perfil.idUsuario"
+            />
         </div>
       </div>
     </div>
@@ -20,7 +35,7 @@
     <div v-if="show" class="q-pa-md">
       <create  :objeto="objeto" :objetoE="detalleE" :isRutina="true" :ejercicios="ejercicios" :categorias="categorias" :musculos="musculos" :equipamientos="equipamientos" :accion="accion" class="tabla"></create>
     </div>
-    <div class="flex">
+    <div class="flex">      
         <detalle v-for="{id, nombre, musculoPrincipal, musculoSecundario, tiempo} in detallesR" :key="id"  
         :nombre="nombre"
         :musculoPrincipal="musculoPrincipal"
@@ -53,6 +68,7 @@ export default defineComponent({
           objeto = ref({}),
           detalleE = ref({}),
           accion = ref(),
+          meGusta = ref(),
           filtroEjercicio = ref(''),
           show = ref(false);
   
@@ -76,6 +92,14 @@ export default defineComponent({
     const extra=()=>{
       return true;
     }
+    const fetchPerfil = async()=>{
+      await store.dispatch('perfiles/loadPerfil',{id: user.value.id});
+      fetchMeGusta();
+    }
+    const fetchMeGusta = async()=>{      
+      await store.dispatch('perfiles/loadMeGusta',{rutina: route.params.id, perfil: perfil.value.id});
+      meGusta.value = like.value == true ? 1 : 0;
+    }
     const fetchEjercicios = async()=>{
       const fromEjercicio = computed(() => store.getters['ejercicios/getFrom']);
       await store.dispatch('ejercicios/loadEjercicios',{limite:100,desde:fromEjercicio.value});
@@ -86,6 +110,11 @@ export default defineComponent({
     }
     const fetchRutina = async()=>{
       await store.dispatch('rutinas/loadRutina',{id: route.params.id});
+      fetchPerfil();      
+    }
+    const darLike = async() =>{
+      await store.dispatch('perfiles/setMeGusta',{idRutina: route.params.id, idPerfil: perfil.value.id, like: meGusta.value == 1 ? true : false});
+      meGusta.value = like.value ? 1 : 0;
     }
     
     const fetchMusculos = async()=>{
@@ -120,16 +149,17 @@ export default defineComponent({
     }
   
     const verEjercicio = (valor) => {
-      debugger;
       show.value = false;
       objeto.value = {};
       detalleE.value = detallesR.value.find( detalle => detalle.id === valor )
       const {id, nombre, detalles, preparacion, ejecucion, estado, idMusculoPrincipal, idMusculoSecundario, idEquipamiento,idCategoria} = ejercicios.value.find( ejercicio => ejercicio.id === detalleE.value.idEjercicio )
-      objeto.value = {id,nombre, detalles, preparacion, ejecucion, estado, idMusculoPrincipal, idMusculoSecundario, idEquipamiento, idCategoria, tipo : t};
-      
+      objeto.value = {id,nombre, detalles, preparacion, ejecucion, estado, idMusculoPrincipal, idMusculoSecundario, idEquipamiento, idCategoria}; 
       accion.value='E';
       show.value = true;
     }
+    const perfil = computed(() => store.getters['perfiles/getPerfil']);
+    const like = computed(() => store.getters['perfiles/getMegusta']);
+    const user = computed(() => store.getters['auth/getMe']);
     const ejercicios = computed(() => store.getters['ejercicios/getEjercicios']);
     const rutina = computed(() => store.getters['rutinas/getRutina']);
     const detallesR = computed(() => store.getters['rutinas/getDetalles']);
@@ -204,8 +234,12 @@ export default defineComponent({
       fetchEjercicios,
       crear,
       exportarTable,
+      darLike,
       detalleE,
-      rutina
+      rutina,
+      user,
+      perfil,
+      meGusta
     }
   }
 })

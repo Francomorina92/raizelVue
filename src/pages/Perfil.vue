@@ -1,5 +1,5 @@
 <template>
-  <q-page class="flex">
+  <q-page class="flex column">
     <div class="q-pa-md row items-start q-gutter-md">
       <q-card class="my-card">
         <q-btn
@@ -172,19 +172,84 @@
         </q-list>
       </q-card>
     </div>
+    <div class="q-pa-md flex justify-center  espacio">
+      <div class="flex column items-center">
+        <div class="flex row items-center">
+          <h1 class="text-h3 h3">Mis Rutinas</h1>
+        </div>      
+        <div class="flex">
+          <q-carousel
+            v-model="slide"
+            transition-prev="slide-right"
+            transition-next="slide-left"
+            animated
+            control-color="primary"
+            padding
+            arrows
+            :autoplay="2500"
+            height="300px"
+            class="bg-grey-1 shadow-2 rounded-borders"
+          >
+            <q-carousel-slide v-for="({id, nombre, calificacion, tiempo}, index) in rutinas" :key="id" :name="index"  class="column no-wrap">
+            <rutina  
+              :nombre="nombre"
+              :calificacion="calificacion"
+              :tiempo="tiempo"
+              class="q-ma-md rutina"
+              @click="verRutina(id)"
+              >
+              </rutina>
+            </q-carousel-slide>          
+          </q-carousel>
+        </div>
+      </div>
+      <div class="flex column items-center">
+        <div class="flex row items-center">
+          <h1 class="text-h3 h3">Mis Favoritas</h1>
+        </div>      
+        <div class="flex">
+          <q-carousel
+            v-model="slideF"
+            transition-prev="slide-right"
+            transition-next="slide-left"
+            animated
+            control-color="primary"
+            padding
+            arrows
+            :autoplay="2500"
+            height="300px"
+            class="bg-grey-1 shadow-2 rounded-borders"
+          >
+            <q-carousel-slide v-for="({id, nombre, calificacion, tiempo}, index) in rutinasF" :key="id" :name="index"  class="column no-wrap">
+            <rutina  
+              :nombre="nombre"
+              :calificacion="calificacion"
+              :tiempo="tiempo"
+              class="q-ma-md rutina"
+              @click="verRutina(id)"
+              >
+              </rutina>
+            </q-carousel-slide>          
+          </q-carousel>
+        </div>
+      </div>
+      
+    </div>
   </q-page>
 </template>
 
 <script>
 import {  useQuasar } from 'quasar'
 import { defineComponent, ref, computed, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex'
-
+import Rutina from '../components/Rutina.vue';
 export default defineComponent({
   name: 'Perfil',
+  components: { Rutina },
   setup(){
     const route = useRoute(),
+          router = useRouter(),
           store = useStore(),
           $q = useQuasar(),
           objeto = ref({});
@@ -196,8 +261,22 @@ export default defineComponent({
           web = ref(''),
           nombre = ref(''),
           apellido = ref(''),
+          slide = ref(0),
+          slideF = ref(0),
           edit = ref(false);
-  
+    const fetchRutinas = async()=>{
+      await store.dispatch('rutinas/resetRutinas');
+      await store.dispatch('rutinas/loadRutinas', {idP: route.params.id});
+    }
+    const fetchRutinasFavoritas = async()=>{
+      await store.dispatch('rutinas/loadRutinasFavoritas', {idP: route.params.id});
+    }
+    const verRutina = (valor) =>{
+      router.push('/rutina/'+valor);
+    }
+    const idRutinas = () =>{
+      return user.value.id == route.params.id;
+    }
     
     const extra=()=>{
       return true;
@@ -230,12 +309,15 @@ export default defineComponent({
     
     onMounted(()=> 
       extra(),
-      fetchPerfil()
+      fetchPerfil(),
+      fetchRutinas(),
+      fetchRutinasFavoritas()
     );
     const user = computed(() => store.getters['auth/getMe']);
     const perfil = computed(() => store.getters['perfiles/getPerfil']);
     const loading = computed(() => store.getters['perfiles/getLoading']);
-    
+    const rutinas = computed(() => store.getters['rutinas/getRutinas']);
+    const rutinasF = computed(() => store.getters['rutinas/getRutinasFavoritas']);
     
     return{
       cancelar,
@@ -253,7 +335,14 @@ export default defineComponent({
       show,
       user,
       edit,
-      fetchPerfil
+      rutinas,
+      fetchPerfil,
+      verRutina,
+      fetchRutinas,
+      idRutinas,
+      slide,
+      slideF,
+      rutinasF
     }
   }
 })
@@ -281,6 +370,11 @@ export default defineComponent({
   top: 10px;
   left: 10px;
 }
-  
+.rutina{
+  margin-left: 0;
+}
+.espacio{
+  column-gap: 5%;
+}
 
 </style>
