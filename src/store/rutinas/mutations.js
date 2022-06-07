@@ -8,6 +8,15 @@ export default{
         state.rutinas = [ ...state.rutinas, ...rowsFormateada ]
         state.isLoading = false
     },
+    setRutinasFavoritas : ( state, rutinas ) => {
+        const rowsFormateada = rutinas.map(function(x) {
+            if (state.rutinasFavoritas.filter(c => c.id !== x.id? false : true)){
+                return x;
+            }
+        });
+        state.rutinasFavoritas = [ ...state.rutinasFavoritas, ...rowsFormateada ]
+        state.isLoading = false
+    },
     resetRutinas : ( state ) => {
         state.isLoading= false,
         state.rutinas= [],

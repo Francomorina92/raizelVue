@@ -14,6 +14,30 @@ export default {
             commit('setLoading', false )
         }        
     },
+    async loadRutinasTodas({ commit },objeto) {
+        try {
+            commit('setLoading', true )
+            const {data} = await api.get(`/rutinas`)
+        
+            commit('setRutinas', data )
+        } catch (error) {
+            commit('setError', error )
+        }finally{
+            commit('setLoading', false )
+        }        
+    },
+    async loadRutinasFavoritas({ commit },objeto) {
+        try {
+            commit('setLoading', true )
+            const {data} = await api.get(`/rutinas`,{params:{perfil: objeto.idP, favorita : true}})
+        
+            commit('setRutinasFavoritas', data )
+        } catch (error) {
+            commit('setError', error )
+        }finally{
+            commit('setLoading', false )
+        }        
+    },
     async loadPerfil({ commit },objeto) {
         try {
             commit('setLoading', true )
