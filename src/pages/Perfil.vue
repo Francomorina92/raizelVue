@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex column">
-    <div class="q-pa-md row items-start q-gutter-md">
+    <div class="q-pa-md row flex justify-center q-gutter-md">
       <q-card class="my-card">
         <q-btn
           color="primary"
@@ -171,11 +171,59 @@
                     
         </q-list>
       </q-card>
+      <div class="flex column items-center">
+        <div class="flex row items-center">
+          <h1 class="text-h5 h5 q-mr-md">Calificaciones</h1>
+          <q-btn
+            color="primary"
+            icon-right="fa-regular fa-star-half-stroke"
+            label="Calificame"
+            class=""
+            no-caps
+            unelevated
+            @click="calificar()"
+            v-if="user.id == perfil.idUsuario"
+          />
+        </div>      
+        <div class="flex">
+          <q-carousel
+            v-model="slideC"
+            transition-prev="slide-right"
+            transition-next="slide-left"
+            animated
+            control-color="primary"
+            padding
+            arrows
+            :autoplay="3000"
+            height="300px"
+            class="bg-grey-1 shadow-2 rounded-borders"
+          >
+            <q-carousel-slide v-for="({id, mensaje, calificacion}, index) in calificaciones" :key="id" :name="index"  class="column no-wrap">
+            <comentario  
+              :objeto="{id, mensaje, calificacion}"
+              class="q-ma-md rutina"
+              >
+              </comentario>
+            </q-carousel-slide>          
+          </q-carousel>
+        </div>
+      </div>
+      <comentario  v-if="showM"
+        :objeto="mensaje"
+        :accion="accion"
+        :ver="false"
+        :idUsuario="user.id"
+        :idPerfil="idPerfil()"
+        class="q-ma-md"
+        @cancelar="cancelarM()"
+      >
+      </comentario>
+      
     </div>
     <div class="q-pa-md flex justify-center  espacio">
       <div class="flex column items-center">
         <div class="flex row items-center">
-          <h1 class="text-h3 h3">Mis Rutinas</h1>
+          <h1 class="text-h4 h4">Mis Rutinas</h1>
         </div>      
         <div class="flex">
           <q-carousel
@@ -205,7 +253,7 @@
       </div>
       <div class="flex column items-center">
         <div class="flex row items-center">
-          <h1 class="text-h3 h3">Mis Favoritas</h1>
+          <h1 class="text-h4 h4">Mis Favoritas</h1>
         </div>      
         <div class="flex">
           <q-carousel
@@ -244,15 +292,19 @@ import { defineComponent, ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex'
 import Rutina from '../components/Rutina.vue';
+import Comentario from '../components/Comentario.vue';
 export default defineComponent({
   name: 'Perfil',
-  components: { Rutina },
+  components: { Rutina, Comentario },
   setup(){
     const route = useRoute(),
           router = useRouter(),
           store = useStore(),
           $q = useQuasar(),
-          objeto = ref({});
+          showM = ref(false),
+          objeto = ref({}),
+          accion = ref(''),
+          mensaje = ref({});
   let  show = ref(false),
           facebook = ref(''),
           instagram = ref(''),
@@ -263,13 +315,20 @@ export default defineComponent({
           apellido = ref(''),
           slide = ref(0),
           slideF = ref(0),
+          slideC = ref(0),
           edit = ref(false);
+    const cancelarM = ()=>{
+      showM.value = false;
+    }
     const fetchRutinas = async()=>{
       await store.dispatch('rutinas/resetRutinas');
       await store.dispatch('rutinas/loadRutinas', {idP: route.params.id});
     }
     const fetchRutinasFavoritas = async()=>{
       await store.dispatch('rutinas/loadRutinasFavoritas', {idP: route.params.id});
+    }
+    const fetchCalificaciones = async()=>{
+      await store.dispatch('comentarios/loadCalificaciones', {perfil: route.params.id});
     }
     const verRutina = (valor) =>{
       router.push('/rutina/'+valor);
@@ -282,6 +341,7 @@ export default defineComponent({
       return true;
     }
     const fetchPerfil = async()=>{
+      await store.dispatch('comentarios/resetCalificaciones');
       await store.dispatch('perfiles/loadPerfil',{id: route.params.id});
       facebook.value = perfil.value.facebook
       instagram.value = perfil.value.instagram
@@ -299,6 +359,20 @@ export default defineComponent({
       nombre.value = perfil.value.nombre
       apellido.value = perfil.value.apellido
     }
+    const idPerfil = ()=>{
+      return route.params.id
+    }
+    const calificar = () => {
+      showM.value = false;
+      mensaje.value = {};
+      mensaje.value = calificaciones.value.find(c => c.idUsuario == user.value.id)
+      if (mensaje.value != {} && mensaje.value != undefined) {
+        accion.value =  'E'
+      }else{
+        accion.value =  'C'
+      }
+      showM.value = true;
+    }
     const guardar = async () => {
       edit.value = false;
       await store.dispatch('perfiles/editPerfil',{id: route.params.id,idUsuario: perfil.value.id, nombre: nombre.value,apellido: apellido.value,facebook: facebook.value,twitter: twitter.value,instagram: instagram.value,web: web.value});
@@ -307,22 +381,28 @@ export default defineComponent({
       edit.value = false;
     }
     
+    
     onMounted(()=> 
       extra(),
       fetchPerfil(),
       fetchRutinas(),
-      fetchRutinasFavoritas()
+      fetchRutinasFavoritas(),
+      fetchCalificaciones()
     );
     const user = computed(() => store.getters['auth/getMe']);
     const perfil = computed(() => store.getters['perfiles/getPerfil']);
     const loading = computed(() => store.getters['perfiles/getLoading']);
     const rutinas = computed(() => store.getters['rutinas/getRutinas']);
     const rutinasF = computed(() => store.getters['rutinas/getRutinasFavoritas']);
+    const calificaciones = computed(() => store.getters['comentarios/getCalificaciones']);
     
     return{
       cancelar,
+      cancelarM,
       guardar,
       editar,
+      showM,
+      calificar,
       facebook,
       instagram,
       linkedin,
@@ -342,7 +422,12 @@ export default defineComponent({
       idRutinas,
       slide,
       slideF,
-      rutinasF
+      rutinasF,
+      slideC,
+      accion,
+      calificaciones,
+      idPerfil,
+      mensaje
     }
   }
 })
