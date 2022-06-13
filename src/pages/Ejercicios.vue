@@ -1,5 +1,5 @@
 <template>
-  <q-page class="flex flex-center">
+  <q-page class="flex justify-center">
     <div class="q-pa-md">
       <q-table
         title="Ejercicios"

@@ -59,7 +59,13 @@
         <q-separator />
 
         <q-card-section style="max-height: 50vh" class="scroll">
-          <p v-for="n in 15" :key="n">Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum repellendus sit voluptate voluptas eveniet porro. Rerum blanditiis perferendis totam, ea at omnis vel numquam exercitationem aut, natus minima, porro labore.</p>
+          <p>Al descargar o usar la aplicación, estos términos se aplicarán automáticamente a usted; por lo tanto, debe asegurarse de leerlos detenidamente antes de usar la aplicación. No tiene permitido copiar ni modificar la aplicación, ninguna parte de la aplicación o nuestras marcas comerciales de ninguna manera. No está permitido intentar extraer el código fuente de la aplicación, y tampoco debe intentar traducir la aplicación a otros idiomas, o hacer versiones derivadas. La aplicación en sí, y todas las marcas comerciales, derechos de autor, derechos de bases de datos y otros derechos de propiedad intelectual relacionados con ella, siguen perteneciendo a Raizel. </p>
+          <p>Raizel se compromete a que la aplicación sea lo más útil y eficiente posible, por ese motivo, nos reservamos el derecho de realizar cambios en la aplicación en cualquier momento y por cualquier motivo.</p>
+          <p>Debe tener en cuenta que hay ciertas cosas de las que Raizel no se hará responsable. Ciertas funciones de la aplicación requerirán que la aplicación tenga una conexión a Internet activa. La conexión puede ser Wi-Fi, o proporcionada por su proveedor de red móvil, pero Raizel no puede asumir la responsabilidad de que la aplicación no funcione con todas sus funciones si no tiene acceso a Wi-Fi y no le queda nada de su asignación de datos.</p>
+          <p>Con respecto a la responsabilidad de Raizel por su uso de la aplicación, es importante tener en cuenta que debe conocer sus propias limitaciones con respecto a los ejercicios encontrados en la aplicación, Raizel no se hace responsable por ninguna lesión o malestar al realizar algunos de los ejercicios.</p>
+          <p>Es posible que actualicemos nuestros Términos y condiciones de vez en cuando. Por lo tanto, se le recomienda revisar esta página periódicamente para ver si hay cambios. Le notificaremos cualquier cambio publicando los nuevos Términos y Condiciones en esta página. Estos cambios entran en vigencia inmediatamente después de su publicación en esta página.</p>
+          <p class="bold">Contáctenos:</p>
+          <p class="bold">Si tiene alguna pregunta o sugerencia sobre nuestros Términos y Condiciones, no dude en contactarnos en raizelapp@gmail.com</p>
         </q-card-section>
 
         <q-separator />
@@ -70,7 +76,7 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-  </q-page>
+  </q-page>  
 </template>
 
 <script>
@@ -93,6 +99,7 @@ export default defineComponent({
           listo = ref(false),
           fixed = ref(false),
           password = ref('');
+    const terminosTexto = ``;
     const error = computed(() => store.getters['usuarios/getError']);
     const validate= () => {
       myForm.value.validate().then(success => {
@@ -172,7 +179,8 @@ export default defineComponent({
       fixed,
       password,
       validarEmail,
-      terminos
+      terminos,
+      terminosTexto
     }
   }
 })
@@ -209,5 +217,8 @@ span{
 .colorP{
   color: #2CB1BC;
   cursor: pointer;
+}
+.bold{
+  font-weight: bold;
 }
 </style>

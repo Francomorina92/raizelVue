@@ -191,11 +191,11 @@
             transition-prev="slide-right"
             transition-next="slide-left"
             animated
+            infinite
             control-color="primary"
-            padding
             arrows
             :autoplay="3000"
-            height="300px"
+            height="auto"
             class="bg-grey-1 shadow-2 rounded-borders"
           >
             <q-carousel-slide v-for="({id, mensaje, calificacion}, index) in calificaciones" :key="id" :name="index"  class="column no-wrap">
@@ -231,11 +231,11 @@
             transition-prev="slide-right"
             transition-next="slide-left"
             animated
+            infinite
             control-color="primary"
-            padding
             arrows
             :autoplay="2500"
-            height="300px"
+            height="auto"
             class="bg-grey-1 shadow-2 rounded-borders"
           >
             <q-carousel-slide v-for="({id, nombre, calificacion, tiempo}, index) in rutinas" :key="id" :name="index"  class="column no-wrap">
@@ -261,11 +261,11 @@
             transition-prev="slide-right"
             transition-next="slide-left"
             animated
+            infinite
             control-color="primary"
-            padding
             arrows
             :autoplay="2500"
-            height="300px"
+            height="auto"
             class="bg-grey-1 shadow-2 rounded-borders"
           >
             <q-carousel-slide v-for="({id, nombre, calificacion, tiempo}, index) in rutinasF" :key="id" :name="index"  class="column no-wrap">
