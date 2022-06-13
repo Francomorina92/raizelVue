@@ -11,7 +11,7 @@
           @click="abrirMenu"
         />
 
-        <q-toolbar-title>
+        <q-toolbar-title @click="inicioLogo()">
           Raizel
         </q-toolbar-title>
       </q-toolbar>
@@ -134,7 +134,20 @@
             </q-list>
           </q-menu>
         </div>
-        <div class="fixed-bottom">    
+        <div class="fixed-bottom">   
+          <!-- preguntas -->   
+          <q-item clickable to="/preguntas">
+            <q-item-section class="icono"
+              avatar
+            > 
+            <q-icon name="fa-solid fa-clipboard-question" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Preguntas y Respuestas</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+            </q-item-section>                  
+          </q-item>      
         <!-- Login -->   
         <q-item clickable to="/login" v-if="!autenticado">
           <q-item-section class="icono"
@@ -210,6 +223,9 @@ export default defineComponent({
       await store.dispatch('auth/singOut');
       route.push('/login');
     }
+    const inicioLogo = ()=>{
+      route.push('/index');
+    }
     const comprobar = async()=>{
       await store.dispatch('auth/comprobar');
       if (!autenticado.value) {
@@ -241,6 +257,7 @@ export default defineComponent({
       titulo,
       menuAbierto,
       singOut,
+      inicioLogo,
       linkPerfil,
       linkRutinas,
       abrirMenu () {

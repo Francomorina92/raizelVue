@@ -6,6 +6,7 @@ const routes = [
     children: [
       { path: 'index',name: 'index', component: () => import('pages/IndexPage.vue') , meta:{ requireLogin: true} },
       { path: 'login', name:'login', component: () => import('pages/Login.vue') , meta:{ requireLogin: false} },
+      { path: 'preguntas', name:'preguntas', component: () => import('pages/Preguntas.vue') , meta:{ requireLogin: false} },
       { path: 'registro', name:'registro', component: () => import('pages/Registro.vue') , meta:{ requireLogin: false} },
       { path: 'datoscem', name:'datoscem', component: () => import('src/pages/DatosCEM.vue'), meta:{ requireLogin: true} },
       { path: 'usuarios', name:'usuarios', component: () => import('src/pages/Usuarios.vue') , meta:{ requireLogin: true} },
