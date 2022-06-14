@@ -21,7 +21,6 @@ export default{
                 return x
             }
         });
-        debugger;
         state.calificaciones = [ ...calificaciones]
         state.isLoading = false
     },

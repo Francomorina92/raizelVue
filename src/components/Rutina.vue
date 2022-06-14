@@ -13,7 +13,7 @@
           </div>
         </div>
 
-        <q-rating readonly v-model="calificacionR" :max="5"  size="32px" color="orange" v-if="calificacionR"/>
+        <q-rating readonly v-model="calificacionR" :max="5"  size="32px" color="orange" :class="!calificacionR ? 'clasificacion' : ''" />
       </q-card-section>
 
       <q-card-section class="q-pt-none" v-if="musculoPrincipalR">
@@ -76,5 +76,8 @@ export default defineComponent({
 .my-card{
     width: 100%;
     max-width: 300px;
+}
+.clasificacion{
+    opacity: 0%;
 }
 </style>

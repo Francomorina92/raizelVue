@@ -11,7 +11,7 @@
           @click="abrirMenu"
         />
 
-        <q-toolbar-title>
+        <q-toolbar-title @click="inicioLogo()">
           Raizel
         </q-toolbar-title>
       </q-toolbar>
@@ -64,13 +64,39 @@
           <q-item-section side>
           </q-item-section>                  
         </q-item>
-        <div v-if="autenticado">
+        <!-- Buscar Rutinas -->
+        <q-item clickable to="/index" v-if="autenticado">
+          <q-item-section class="icono"
+            avatar
+          > 
+            <q-icon name="fa-solid fa-magnifying-glass" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Buscar Rutinas</q-item-label>
+          </q-item-section>
+          <q-item-section side>
+          </q-item-section>                  
+        </q-item>
+        <!-- Estadísticas -->
+        <q-item clickable to="/estadisticas" v-if="autenticado">
+          <q-item-section class="icono"
+            avatar
+          > 
+            <q-icon name="fa-solid fa-chart-column" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Estadísticas</q-item-label>
+          </q-item-section>
+          <q-item-section side>
+          </q-item-section>                  
+        </q-item>
+        <!-- <div v-if="autenticado">
         <EssentialLink
           v-for="link in linksList"
           :key="link.title"
           v-bind="link"
         />
-        </div>
+        </div> -->
         <div class="cursor-pointer non-selectable" v-if="user && user.rol =='ADMIN_ROLE' && autenticado">
           <q-item
             clickable            
@@ -108,20 +134,20 @@
             </q-list>
           </q-menu>
         </div>
-        <div class="fixed-bottom">
-          <!-- Configuracion -->
-        <q-item clickable to="/configuracion" v-if="autenticado">
-          <q-item-section class="icono"
-            avatar
-          > 
-            <q-icon name="fa-solid fa-gear" />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>Configuración</q-item-label>
-          </q-item-section>
-          <q-item-section side>
-          </q-item-section>                  
-        </q-item>             
+        <div class="fixed-bottom">   
+          <!-- preguntas -->   
+          <q-item clickable to="/preguntas">
+            <q-item-section class="icono"
+              avatar
+            > 
+            <q-icon name="fa-solid fa-clipboard-question" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Preguntas y Respuestas</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+            </q-item-section>                  
+          </q-item>      
         <!-- Login -->   
         <q-item clickable to="/login" v-if="!autenticado">
           <q-item-section class="icono"
@@ -161,16 +187,16 @@
 <script>
 import { useQuasar } from 'quasar'
 import { defineComponent, onMounted, ref, computed, onUpdated } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
+/* import EssentialLink from 'components/EssentialLink.vue' */
 import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router';
 
 export default defineComponent({
   name: 'MainLayout',
 
-  components: {
+  /* components: {
     EssentialLink
-  },
+  }, */
 
   setup () {
     const menuAbierto = ref(false),
@@ -196,6 +222,9 @@ export default defineComponent({
     const singOut= async()=>{
       await store.dispatch('auth/singOut');
       route.push('/login');
+    }
+    const inicioLogo = ()=>{
+      route.push('/index');
     }
     const comprobar = async()=>{
       await store.dispatch('auth/comprobar');
@@ -228,6 +257,7 @@ export default defineComponent({
       titulo,
       menuAbierto,
       singOut,
+      inicioLogo,
       linkPerfil,
       linkRutinas,
       abrirMenu () {

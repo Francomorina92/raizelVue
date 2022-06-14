@@ -94,7 +94,6 @@ export default {
     async setDetalle({ commit },objeto) {
         try {
             commit('setLoading', true )
-            debugger;
             const {data} = await api.post('/rutinas/detalle',objeto)
             if ( !data ){
                 return
@@ -110,7 +109,6 @@ export default {
     async editDetalle({ commit },objeto) {
         try {
             commit('setLoading', true )
-            debugger;
             const {data} = await api.put(`/rutinas/detalles/${objeto.id}`,objeto)
             if ( !data ){
                 return

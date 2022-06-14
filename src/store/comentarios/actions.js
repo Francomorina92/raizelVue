@@ -13,12 +13,10 @@ export default {
         }finally{
             commit('setLoading', false )
         }
-        
     },
     async setCalificacion({ commit },objeto) {
         try {
             commit('setLoading', true )
-            debugger;
             const {data} = await api.post('/calificaciones',objeto)
             if ( !data ){
                 return
@@ -35,7 +33,6 @@ export default {
     async editCalificacion({ commit },objeto) {
         try {
             commit('setLoading', true )
-            debugger;
             const {data} = await api.put(`/calificaciones/${objeto.id}`,objeto)
             if ( !data ){
                 return
@@ -57,6 +54,18 @@ export default {
         }finally{
             commit('setLoading', false )
         }
-    }
+    },
+    async loadCalificacionesTotales({ commit }) {
+        try {
+            commit('setLoading', true )
+            const {data} = await api.get(`/calificaciones/todos`)
+        
+            commit('setCalificaciones', data.calificaciones )
+        } catch (error) {
+            commit('setError', error )
+        }finally{
+            commit('setLoading', false )
+        }
+    },
 }
 
