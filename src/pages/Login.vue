@@ -101,7 +101,7 @@ export default defineComponent({
         })
         const respuesta = await store.dispatch('auth/login',{email: email.value, password: password.value});
         $q.loading.hide()
-        router.push('/');
+        router.push('/index');
       } catch (error) {
         $q.loading.hide()
         if (error.response.data.msg) {
