@@ -153,6 +153,18 @@ export default {
             commit('setLoading', false )
         }        
     },
+    async deleteDetalle({ commit },objeto) {
+        try {
+            commit('setLoading', true )
+            const {data} = await api.delete(`/rutinas/detalle/${objeto.id}`)
+        
+            commit('deleteDetalle', objeto )
+        } catch (error) {
+            commit('setError', error )
+        }finally{
+            commit('setLoading', false )
+        }        
+    },
 }
 
 

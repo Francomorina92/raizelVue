@@ -25,7 +25,7 @@
           </q-card-actions>
         </div>
         <!-- Ejercicio en si -->
-        <div v-show="show || isRutina == false">
+        <div v-show="!show || isRutina == false || Object.keys(objetoE).length != 0">
           <q-card-section class="cancelar">
             <div class="text-h6 text-center gris">{{objeto.tipo}}</div>            
           </q-card-section>
@@ -205,9 +205,13 @@
           <q-card-actions vertical >
             <q-btn color="primary" :label="accion == 'C' ? 'Crear' : 'Actualizar'" type="submit" class="w90 btn"/>
           </q-card-actions>
+          <q-card-actions vertical v-if="accion != 'C' && isRutina">
+            <q-btn color="primary" label="Eliminar" @click="eliminar" class="w90 btn"/>
+          </q-card-actions>
         </div>
       </q-form>
     </q-card>
+
 </template>
 
 <script>
@@ -245,10 +249,14 @@ export default {
         },
         isRutina: {
             type: Boolean, default: false
-        }
+        },
+        isShow: {
+            type: Boolean, default: false
+        },
+
 
     },
-    setup(props){
+    setup(props, ctx){
         const $q = useQuasar(),
               route = useRoute(),
               store = useStore(),
@@ -426,6 +434,16 @@ export default {
           fetchPerfil();
           cambiarImagen();
         })
+        function eliminar (){
+          $q.dialog({
+            title: 'Eliminar',
+            message: '¿Seguro que quiere eliminar el detalle?',
+            cancel: true,
+            persistent: true
+          }).onOk(async() => {
+            await store.dispatch('rutinas/deleteDetalle',{id:props.objetoE.id})
+          })
+        }
         const uploads = computed(() => store.getters['uploads/getUrl']);
         const perfil = computed(() => store.getters['perfiles/getPerfil']);
         const fetchPerfil = async()=>{
@@ -500,6 +518,7 @@ export default {
           idMusculoSecundario.value=e.idMusculoSecundario
           tiempo.value=e.tiempo
           nombre.value=e.nombre
+          imagen.value = e.img
           preparacion.value=e.preparacion
         }
         return{
@@ -540,7 +559,8 @@ export default {
           imagen,
           imagenSeleccionada,
           cambiarImagen,
-          user
+          user,
+          eliminar
         }
     }
 }

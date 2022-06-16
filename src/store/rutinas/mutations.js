@@ -62,4 +62,13 @@ export default{
         state.detalles = [ ...detalles]
         state.isLoading = false
     },
+    deleteDetalle : ( state, detalle ) => {
+        const detalles = state.detalles.map(function (x) {
+            if (x.id!=detalle.id) {
+                return x
+            }
+        });
+        state.detalles = [ ...detalles]
+        state.isLoading = false
+    },
 }

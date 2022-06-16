@@ -287,7 +287,6 @@
           </q-carousel>
         </div>
       </div>
-      
     </div>
   </q-page>
 </template>
@@ -386,7 +385,7 @@ export default defineComponent({
       edit.value = false;
       await store.dispatch('perfiles/editPerfil',{id: route.params.id,idUsuario: user.value.id, nombre: nombre.value,apellido: apellido.value,facebook: facebook.value,twitter: twitter.value,instagram: instagram.value,web: web.value});
       if (imagen.value != '') {
-        await store.dispatch('uploads/editUploads',{coleccion: 'usuarios',id: user.value.id, archivo: primerArchivo });
+        await store.dispatch('uploads/editUploads',{coleccion: 'usuarios',id: perfil.value.id, archivo: primerArchivo });
         await store.dispatch('auth/setImg', uploads.value );
       }
     }
@@ -404,7 +403,11 @@ export default defineComponent({
     );
     
     const cambiarImagen = () => {
-        imagen.value = user.value.img;
+        if(user.value.id == perfil.value.idUsuario){
+          imagen.value = user.value.img;
+        }else{
+          imagen.value = perfil.value.img ? perfil.value.img : '';
+        }
         const $seleccionArchivos = document.querySelector("#seleccionArchivos"),
         $imagenPrevisualizacion = document.querySelector("#imagenPrevisualizacion");
 
