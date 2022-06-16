@@ -24,10 +24,11 @@
         <create  :objeto="objeto" :accion="accion" class="tabla"></create>
       </div>
       <div class="flex justify-center">
-        <rutina v-for="{id, nombre, calificacion, tiempo} in rutinas" :key="id" 
+        <rutina v-for="{id, nombre, calificacion, tiempo, img} in rutinas" :key="id" 
         :nombre="nombre"
         :calificacion="calificacion"
         :tiempo="tiempo"
+        :imagen="img"
         class="q-ma-md"
         @click="verRutina(id)"></rutina>
       </div>
@@ -66,7 +67,7 @@ export default defineComponent({
     }
     const fetchRutinas = async()=>{
       await store.dispatch('rutinas/resetRutinas');
-      await store.dispatch('rutinas/loadRutinas', {id: route.params.id, idP: 1});
+      await store.dispatch('rutinas/loadRutinas', {id: route.params.id, idP: perfil.value.id});
     }
     const busquedaUsuario = async(tecla)=>{
       if (tecla==0 && filtroUsuario.value.length==1) {
@@ -108,6 +109,10 @@ export default defineComponent({
     const loadingU = computed(() => store.getters['usuarios/getLoading']);
     const idRutinas = () =>{
       return user.value.id == route.params.id;
+    }
+    const perfil = computed(() => store.getters['perfiles/getPerfil']);
+    const fetchPerfil = async()=>{
+      await store.dispatch('perfiles/loadPerfil',{id: user.value.id});
     }
     
     return{

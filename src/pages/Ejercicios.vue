@@ -82,7 +82,7 @@
       </q-card>
     </div>
     <div v-else class="q-pa-md">
-      <create  :objeto="objeto" :categorias="categorias" :musculos="musculos" :equipamientos="equipamientos" :accion="accion" class="tabla"></create>
+      <create  @cancelar="cancelar()" :objeto="objeto" :categorias="categorias" :musculos="musculos" :ejercicios="[]" :equipamientos="equipamientos" :accion="accion" :isRutina="false" class="tabla"></create>
     </div>
   </q-page>
 </template>
@@ -127,6 +127,9 @@ export default defineComponent({
     ]
     const extra=()=>{
       return true;
+    }
+    const cancelar = ()=>{
+      show.value = false;
     }
     const fetchEjercicios = async()=>{
       const fromEjercicio = computed(() => store.getters['ejercicios/getFrom']);
@@ -187,8 +190,8 @@ export default defineComponent({
     const editar= (objetoId,t) => {
       show.value = false;
       objeto.value = {};
-      const {id, nombre, detalles, preparacion, ejecucion, estado, idMusculoPrincipal, idMusculoSecundario, idEquipamiento,idCategoria, tiempo} = ejercicios.value.find( ejercicio => ejercicio.id === objetoId )
-      objeto.value = {id,nombre, detalles, preparacion, ejecucion, estado, idMusculoPrincipal, idMusculoSecundario, idEquipamiento, idCategoria, tipo : t, tiempo};
+      const {id, nombre, detalles, preparacion, ejecucion, estado, idMusculoPrincipal, idMusculoSecundario, idEquipamiento,idCategoria, tiempo, img} = ejercicios.value.find( ejercicio => ejercicio.id === objetoId )
+      objeto.value = {id,nombre, detalles, preparacion, ejecucion, estado, idMusculoPrincipal, idMusculoSecundario, idEquipamiento, idCategoria, tipo : t, tiempo, img};
       accion.value='E';
       show.value = true;
     }
@@ -266,7 +269,8 @@ export default defineComponent({
       busquedaEjercicio,
       crear,
       editar,
-      exportarTable
+      exportarTable,
+      cancelar
     }
   }
 })

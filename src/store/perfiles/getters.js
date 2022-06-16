@@ -2,6 +2,9 @@ export default {
     getPerfil: ( state ) => {
         return state.perfil
     },
+    getPerfilPropio: ( state ) => {
+        return state.perfilPropio
+    },
     getMegusta: ( state ) => {
         return state.like
     },

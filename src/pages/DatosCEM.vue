@@ -367,7 +367,6 @@ export default defineComponent({
         }else{
           rows = columns;
         }
-        
         const content = [columns.map(col => wrapCsvValue(col.label))].concat(
           rows.map(row => columns.map(col => wrapCsvValue(
             typeof col.field === 'function'

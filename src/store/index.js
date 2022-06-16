@@ -10,6 +10,7 @@ import rutinas from './rutinas'
 import auth from './auth'
 import comentarios from './comentarios'
 import likes from './likes'
+import uploads from './uploads'
 // import example from './module-example'
 
 /*
@@ -33,7 +34,8 @@ export default store(function (/* { ssrContext } */) {
       rutinas: rutinas,
       auth: auth,
       comentarios: comentarios,
-      likes: likes
+      likes: likes,
+      uploads: uploads
     },
 
     // enable strict mode (adds overhead!)

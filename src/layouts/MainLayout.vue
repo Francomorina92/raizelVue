@@ -143,7 +143,7 @@
             <q-icon name="fa-solid fa-clipboard-question" />
             </q-item-section>
             <q-item-section>
-              <q-item-label>Preguntas y Respuestas</q-item-label>
+              <q-item-label>Preguntas Frecuentes</q-item-label>
             </q-item-section>
             <q-item-section side>
             </q-item-section>                  
@@ -240,15 +240,20 @@ export default defineComponent({
       }
     }
     const linkPerfil = ()=>{
-      route.push({name: 'perfil', params: { id: user.value.id}});
+      route.push({name: 'perfil', params: { id: perfil.value.id}});
     }
     const linkRutinas = ()=>{
       route.push({name: 'rutinas', params: { id: user.value.id}});
     }
     const autenticado = computed(() => store.getters['auth/getAutenticado']);
     const user = computed(() => store.getters['auth/getMe']);
-          
-
+    const fetchPerfil = async()=>{
+      await store.dispatch('perfiles/loadPerfil',{id: user.value.id});
+    }
+    const perfil = computed(() => store.getters['perfiles/getPerfil']);
+    onMounted(()=>{
+      fetchPerfil();
+    })
     return {
       autenticado,
       linksList,

@@ -56,6 +56,9 @@ export const singOut = async ({commit}) => {
 export const getMe = async ({commit, dispatch}, token) => {
     
 }
+export const setImg = async ({commit}, imagen) => {
+    commit('setImg', imagen)
+}
 export const init = async ({commit, dispatch}) => {
     const token = localStorage.getItem('accessToken');
     const usuario = localStorage.getItem('usuario');

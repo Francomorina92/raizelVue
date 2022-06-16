@@ -1,7 +1,6 @@
 <template>
   <q-card class="my-card">
-      <q-img :src="imagen != '' ? imagen : 'https://cdn.quasar.dev/img/chicken-salad.jpg'" />
-
+      <q-img :src="imagen  ? imagen : 'https://res.cloudinary.com/raizel/image/upload/v1655250986/wmozjlogmld4lpb7un4c.jpg'" />
       <q-card-section>
         <div class="row no-wrap items-center">
           <div class="col text-h6 ellipsis">
@@ -72,7 +71,7 @@ export default defineComponent({
 })
 </script>
 
-<style>
+<style scoped>
 .my-card{
     width: 100%;
     max-width: 300px;

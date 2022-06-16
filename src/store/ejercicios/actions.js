@@ -110,6 +110,16 @@ export default {
         }finally{
             commit('setLoading', false )
         }
+    },
+    async cambiarImagen({ commit }, objeto) {
+        try {
+            commit('setLoading', true )
+            commit('cambiarImagen', objeto)
+        } catch (ex) {
+            commit('setError', ex.response.data.errors )
+        }finally{
+            commit('setLoading', false )
+        }
     }
 }
 

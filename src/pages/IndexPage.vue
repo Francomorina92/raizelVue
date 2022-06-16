@@ -13,10 +13,11 @@
       </div>
       
       <div class="flex justify-center">
-        <rutina v-for="{id, nombre, calificacion, tiempo} in rutinas" :key="id" 
+        <rutina v-for="{id, nombre, calificacion, tiempo, img} in rutinas" :key="id" 
         :nombre="nombre"
         :calificacion="calificacion"
         :tiempo="tiempo"
+        :imagen="img"
         class="q-ma-md"
         @click="verRutina(id)"></rutina>
       </div>

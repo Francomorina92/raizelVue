@@ -146,7 +146,7 @@ export default {
         try {
             commit('setLoading', true )
             const {data} = await api.get(`/rutinas/${objeto.id}`)        
-            commit('setRutina', data[0] )
+            commit('setRutinass', data[0] )
         } catch (error) {
             commit('setError', error )
         }finally{

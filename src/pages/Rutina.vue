@@ -12,8 +12,16 @@
             unelevated
             icon="fa-solid fa-plus"
             @click="crear()"
-            v-if="user.id == perfil.idUsuario"
+            v-if="rutina.idPerfil == perfil.id"
             />
+            <q-btn
+              class="plus q-ml-md"
+              size="12px"
+              color="primary"
+              label="Ver Perfil"
+              unelevated
+              @click="verPerfil"
+              />
             <q-rating
               v-model="meGusta"
               max="1"
@@ -26,22 +34,21 @@
               icon-half="favorite"
               no-dimming
               @click="darLike"
-              v-if="user.id != perfil.idUsuario"
+              v-if="rutina.idPerfil != perfil.id"
             />
         </div>
       </div>
     </div>
-   
     <div v-if="show" class="q-pa-md">
-      <create  :objeto="objeto" :objetoE="detalleE" :isRutina="true" :ejercicios="ejercicios" :categorias="categorias" :musculos="musculos" :equipamientos="equipamientos" :accion="accion" class="tabla"></create>
+      <create @cancelar="cancelar()" :objeto="objeto" :objetoE="detalleE" :isRutina="true" :ejercicios="ejercicios" :categorias="categorias" :musculos="musculos" :equipamientos="equipamientos" :accion="accion" class="tabla index"></create>
     </div>
-    <div class="flex">      
-        <detalle v-for="{id, nombre, musculoPrincipal, musculoSecundario, tiempo} in detallesR" :key="id"  
+    <div class="flex" v-if="detallesR"> 
+        <detalle v-for="{id = 0, nombre, musculoPrincipal, musculoSecundario, tiempo, img} in detallesImagen" :key="id"  
         :nombre="nombre"
         :musculoPrincipal="musculoPrincipal"
         :musculoSecundario="musculoSecundario"
         :tiempo="tiempo"
-        :imagen="imagen"        
+        :imagen="img"        
         class="q-ma-md detalle"
         @click="verEjercicio(id)"
         ></detalle>
@@ -52,7 +59,7 @@
 <script>
 import {  exportFile, useQuasar } from 'quasar'
 import { defineComponent, ref, computed, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex'
 import Detalle  from '../components/Detalle.vue';
 import Create from '../components/CreateEjercicio.vue';
@@ -63,6 +70,7 @@ export default defineComponent({
   name: 'Rutina',
   setup(){
     const route = useRoute(),
+          router = useRouter(),
           store = useStore(),
           $q = useQuasar(),
           objeto = ref({}),
@@ -71,6 +79,7 @@ export default defineComponent({
           meGusta = ref(),
           filtroEjercicio = ref(''),
           show = ref(false);
+    let detallesImagen = ref({});
   
     //Columnas tablas
     const columnsEjercicio = [
@@ -107,6 +116,13 @@ export default defineComponent({
     const fetchDetalles = async()=>{
       await store.dispatch('rutinas/resetDetalles');
       await store.dispatch('rutinas/loadDetalles',{limite:100,desde:0, id: route.params.id});
+      detallesImagen.value = detallesR.value;
+      detallesImagen.value.filter((d)=>{
+        let {img} = ejercicios.value.find( ejercicio => ejercicio.id === d.idEjercicio )
+        let det = d;
+        det.img = img;
+        return det;
+      })
     }
     const fetchRutina = async()=>{
       await store.dispatch('rutinas/loadRutina',{id: route.params.id});
@@ -116,7 +132,9 @@ export default defineComponent({
       await store.dispatch('perfiles/setMeGusta',{idRutina: route.params.id, idPerfil: perfil.value.id, like: meGusta.value == 1 ? true : false});
       meGusta.value = like.value ? 1 : 0;
     }
-    
+    const cancelar = ()=>{
+      show.value = false;
+    }
     const fetchMusculos = async()=>{
       await store.dispatch('musculos/loadMusculos',{limite:100,desde:0, filtro: ''});
     }
@@ -144,16 +162,20 @@ export default defineComponent({
     const crear = () => {
       show.value = false;
       objeto.value = {};
+      detalleE.value={};
       accion.value='C';
       show.value = true;
+    }
+    const verPerfil = ()=>{
+      router.push(`/perfil/${rutina.value.idPerfil}`);
     }
   
     const verEjercicio = (valor) => {
       show.value = false;
       objeto.value = {};
       detalleE.value = detallesR.value.find( detalle => detalle.id === valor )
-      const {id, nombre, detalles, preparacion, ejecucion, estado, idMusculoPrincipal, idMusculoSecundario, idEquipamiento,idCategoria} = ejercicios.value.find( ejercicio => ejercicio.id === detalleE.value.idEjercicio )
-      objeto.value = {id,nombre, detalles, preparacion, ejecucion, estado, idMusculoPrincipal, idMusculoSecundario, idEquipamiento, idCategoria}; 
+      const {id, nombre, detalles, preparacion, ejecucion, estado, idMusculoPrincipal, idMusculoSecundario, idEquipamiento,idCategoria, img} = ejercicios.value.find( ejercicio => ejercicio.id === detalleE.value.idEjercicio )
+      objeto.value = {id,nombre, detalles, preparacion, ejecucion, estado, idMusculoPrincipal, idMusculoSecundario, idEquipamiento, idCategoria,  img}; 
       accion.value='E';
       show.value = true;
     }
@@ -235,11 +257,14 @@ export default defineComponent({
       crear,
       exportarTable,
       darLike,
+      verPerfil,
       detalleE,
       rutina,
       user,
       perfil,
-      meGusta
+      meGusta,
+      detallesImagen,
+      cancelar
     }
   }
 })
@@ -269,5 +294,8 @@ export default defineComponent({
 }
 .detalle{
   max-height: 300px;
+}
+.index{
+  z-index: 1;
 }
 </style>

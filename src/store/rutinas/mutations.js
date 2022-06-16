@@ -37,7 +37,9 @@ export default{
         state.error = error
     },
     setDetalle : ( state, detalle ) => {
-        state.detalles = [ ...state.detalles, detalle ]
+        if (detalle) {
+            state.detalles = [ ...state.detalles, detalle ]
+        }
         state.isLoading = false
     },
     resetDetalles : ( state ) => {
@@ -45,7 +47,7 @@ export default{
         state.detalles= [],
         state.error= null
     },
-    setRutina : ( state, rutina ) => {
+    setRutinass : ( state, rutina ) => {
         state.rutina = rutina
         state.isLoading = false
     },

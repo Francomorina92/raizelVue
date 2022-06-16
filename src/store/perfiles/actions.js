@@ -14,6 +14,18 @@ export default {
             commit('setLoading', false )
         }        
     },
+    async loadPerfilPropio({ commit },objeto) {
+        try {
+            commit('setLoading', true )
+            const {data} = await api.get(`/perfiles/propio/${objeto.id}`)
+        
+            commit('setPerfilPropio', data )
+        } catch (error) {
+            commit('setError', error )
+        }finally{
+            commit('setLoading', false )
+        }        
+    },
     async loadMeGusta({ commit },objeto) {
         try {
             commit('setLoading', true )

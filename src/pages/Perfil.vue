@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex column">
     <div class="q-pa-md row flex justify-center q-gutter-md">
-      <q-card class="my-card">
+      <q-card class="my-card cardd">
         <q-btn
           color="primary"
           icon-right="fa-solid fa-pen-to-square"
@@ -30,7 +30,11 @@
           @click="cancelar()"
           v-if="user.id == perfil.idUsuario && edit"
         />
-        <img src="~assets/user.svg" class="img" >
+        <label v-show="user.id == perfil.idUsuario && edit" for="seleccionArchivos" class="labelArchivo q-btn q-btn-item non-selectable no-outline q-btn--standard q-btn--rectangle bg-primary text-white q-btn--actionable q-focusable q-hoverable w90 btn">
+          Cambiar
+        </label>
+        <input v-show="user.id == perfil.idUsuario && edit" type="file" id="seleccionArchivos" accept="image/*" class="input">
+        <img :src="imagen != '' ? imagen : 'https://res.cloudinary.com/raizel/image/upload/v1655250986/wmozjlogmld4lpb7un4c.jpg'" class="img" >
 
         <q-list v-if="!edit">
           <q-item clickable v-if="perfil.nombre">
@@ -182,7 +186,7 @@
             no-caps
             unelevated
             @click="calificar()"
-            v-if="user.id == perfil.idUsuario"
+            v-if="user.id != perfil.idUsuario"
           />
         </div>      
         <div class="flex">
@@ -238,11 +242,12 @@
             height="auto"
             class="bg-grey-1 shadow-2 rounded-borders"
           >
-            <q-carousel-slide v-for="({id, nombre, calificacion, tiempo}, index) in rutinas" :key="id" :name="index"  class="column no-wrap">
+            <q-carousel-slide v-for="({id, nombre, calificacion, tiempo, img}, index) in rutinas" :key="id" :name="index"  class="column no-wrap">
             <rutina  
               :nombre="nombre"
               :calificacion="calificacion"
               :tiempo="tiempo"
+              :imagen="img"
               class="q-ma-md rutina"
               @click="verRutina(id)"
               >
@@ -268,11 +273,12 @@
             height="auto"
             class="bg-grey-1 shadow-2 rounded-borders"
           >
-            <q-carousel-slide v-for="({id, nombre, calificacion, tiempo}, index) in rutinasF" :key="id" :name="index"  class="column no-wrap">
+            <q-carousel-slide v-for="({id, nombre, calificacion, tiempo, img}, index) in rutinasF" :key="id" :name="index"  class="column no-wrap">
             <rutina  
               :nombre="nombre"
               :calificacion="calificacion"
               :tiempo="tiempo"
+              :imagen="img"
               class="q-ma-md rutina"
               @click="verRutina(id)"
               >
@@ -316,7 +322,9 @@ export default defineComponent({
           slide = ref(0),
           slideF = ref(0),
           slideC = ref(0),
-          edit = ref(false);
+          edit = ref(false),
+          imagen= ref(''),
+          primerArchivo;
     const cancelarM = ()=>{
       showM.value = false;
     }
@@ -329,6 +337,7 @@ export default defineComponent({
     }
     const fetchCalificaciones = async()=>{
       await store.dispatch('comentarios/loadCalificaciones', {perfil: route.params.id});
+      cambiarImagen();
     }
     const verRutina = (valor) =>{
       router.push('/rutina/'+valor);
@@ -342,7 +351,7 @@ export default defineComponent({
     }
     const fetchPerfil = async()=>{
       await store.dispatch('comentarios/resetCalificaciones');
-      await store.dispatch('perfiles/loadPerfil',{id: route.params.id});
+      await store.dispatch('perfiles/loadPerfilPropio',{id: route.params.id});
       facebook.value = perfil.value.facebook
       instagram.value = perfil.value.instagram
       linkedin.value = perfil.value.linkedin
@@ -375,7 +384,11 @@ export default defineComponent({
     }
     const guardar = async () => {
       edit.value = false;
-      await store.dispatch('perfiles/editPerfil',{id: route.params.id,idUsuario: perfil.value.id, nombre: nombre.value,apellido: apellido.value,facebook: facebook.value,twitter: twitter.value,instagram: instagram.value,web: web.value});
+      await store.dispatch('perfiles/editPerfil',{id: route.params.id,idUsuario: user.value.id, nombre: nombre.value,apellido: apellido.value,facebook: facebook.value,twitter: twitter.value,instagram: instagram.value,web: web.value});
+      if (imagen.value != '') {
+        await store.dispatch('uploads/editUploads',{coleccion: 'usuarios',id: user.value.id, archivo: primerArchivo });
+        await store.dispatch('auth/setImg', uploads.value );
+      }
     }
     const cancelar = () => {
       edit.value = false;
@@ -389,8 +402,32 @@ export default defineComponent({
       fetchRutinasFavoritas(),
       fetchCalificaciones()
     );
+    
+    const cambiarImagen = () => {
+        imagen.value = user.value.img;
+        const $seleccionArchivos = document.querySelector("#seleccionArchivos"),
+        $imagenPrevisualizacion = document.querySelector("#imagenPrevisualizacion");
+
+        // Escuchar cuando cambie
+        $seleccionArchivos.addEventListener("change", () => {
+          // Los archivos seleccionados, pueden ser muchos o uno
+          const archivos = $seleccionArchivos.files;
+          // Si no hay archivos salimos de la función y quitamos la imagen
+          if (!archivos || !archivos.length) {
+            imagen.value = "";
+            return;
+          }
+          // Ahora tomamos el primer archivo, el cual vamos a previsualizar
+          primerArchivo = archivos[0];
+          // Lo convertimos a un objeto de tipo objectURL
+          const objectURL = URL.createObjectURL(primerArchivo);
+          // Y a la fuente de la imagen le ponemos el objectURL
+          imagen.value = objectURL;
+        });      
+    };
     const user = computed(() => store.getters['auth/getMe']);
-    const perfil = computed(() => store.getters['perfiles/getPerfil']);
+    const uploads = computed(() => store.getters['uploads/getUrl']);
+    const perfil = computed(() => store.getters['perfiles/getPerfilPropio']);
     const loading = computed(() => store.getters['perfiles/getLoading']);
     const rutinas = computed(() => store.getters['rutinas/getRutinas']);
     const rutinasF = computed(() => store.getters['rutinas/getRutinasFavoritas']);
@@ -427,13 +464,27 @@ export default defineComponent({
       accion,
       calificaciones,
       idPerfil,
-      mensaje
+      mensaje,
+      imagen
     }
   }
 })
 </script>
 <style scoped>
-.my-card{
+.input{
+  opacity: 0;
+  position: absolute;
+}
+.imagen{
+  position: relative;
+}
+.labelArchivo{
+  position: absolute;
+  z-index: 1;
+  top: 10px;
+  left: 35%;
+}
+.cardd{
   width: 100%;
   max-width: 300px;
 }
@@ -460,6 +511,9 @@ export default defineComponent({
 }
 .espacio{
   column-gap: 5%;
+}
+.img{
+  padding: 2px;
 }
 
 </style>

@@ -1,14 +1,21 @@
 <template>
   <q-card class="my-card ancho" >
+      <q-btn
+        color="primary"
+        icon-right="fa-solid fa-circle-xmark"
+        no-caps
+        unelevated
+        @click="$emit('cancelar')"           
+      />
       <q-form
         @submit.prevent="onSubmit"
         class="q-gutter-md"
         ref="myForm"
       >
         <!-- Seleccionar ejercicio -->
-        <div v-if="show && objetoE == {} ">
-          <q-card-section>
-            <div class="text-h6 text-center gris">Seleccione un ejercicio</div>            
+        <div v-show="show && Object.keys(objetoE).length === 0 ">
+          <q-card-section class="cancelar">
+            <div class="text-h6 text-center gris ">Seleccione un ejercicio</div>            
           </q-card-section>
           <div class="q-pa-md ">
             <q-select class="select q-ma-md " v-model="idEjercicio" :options="ejercicios" label="Ejercicio" map-options emit-value option-value="id" option-label="nombre"/>
@@ -18,11 +25,20 @@
           </q-card-actions>
         </div>
         <!-- Ejercicio en si -->
-        <div v-else>
-          <q-card-section>
+        <div v-show="show || isRutina == false">
+          <q-card-section class="cancelar">
             <div class="text-h6 text-center gris">{{objeto.tipo}}</div>            
           </q-card-section>
-
+          <q-separator />
+        <q-card-section class="imagen">
+          <label v-show="!isRutina" for="seleccionArchivos" class="labelArchivo q-btn q-btn-item non-selectable no-outline q-btn--standard q-btn--rectangle bg-primary text-white q-btn--actionable q-focusable q-hoverable w90 btn">
+            Cambiar
+          </label>
+          <input type="file" id="seleccionArchivos" accept="image/*" class="input">
+          
+          <q-img :src="imagen != '' ? imagen : 'https://res.cloudinary.com/raizel/image/upload/v1655250986/wmozjlogmld4lpb7un4c.jpg'" />        
+          
+        </q-card-section>
           <q-separator />
           <q-card-section >
             <q-input v-model="nombre" :readonly="isRutina" label="Nombre" placeholder="Inserte el nombre" type="text" :dense="true" class="w90 gris"
@@ -196,11 +212,12 @@
 
 <script>
 import { useQuasar } from 'quasar'
-import { defineComponent, ref, onUpdated } from 'vue';
+import { defineComponent, ref, onUpdated, onMounted, computed } from 'vue';
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router';
 export default {
     name: 'Create',
+    emits: ['cancelar'],
     props:{
         tipo: {
             type: String, default: 'ejercicio'
@@ -247,7 +264,10 @@ export default {
             tiempo= ref(props.objeto.tiempo),
             nombre= ref(props.objeto.nombre),
             show= ref(props.isRutina),
-            preparacion= ref(props.objeto.preparacion);
+            preparacion= ref(props.objeto.preparacion),
+            imagen= ref(props.objeto.img ? props.objeto.img : ''),
+            imagenSeleccionada,
+            primerArchivo;
 
         let numeroSerie= ref(props.objetoE.numeroSerie ? props.objetoE.numeroSerie : 1),
             descansoSerie= ref(props.objetoE.descansoSerie ? props.objetoE.descansoSerie : 0),
@@ -290,6 +310,7 @@ export default {
                 observaciones: observaciones.value
               });
               reset();
+              ctx.emit('cancelar');
             }else{
               respuesta = await store.dispatch('ejercicios/setEjercicio',{
                 detalles: detalles.value,
@@ -302,9 +323,13 @@ export default {
                 tiempo: tiempo.value,
                 nombre: nombre.value,
                 preparacion: preparacion.value,
-                idPerfil: 2 //corregir esto luego con login
+                idPerfil: perfil.value.id
               });
+              if (imagen.value != '') {
+                await store.dispatch('uploads/editUploads',{coleccion: 'ejercicios',id: respuesta.id, archivo: primerArchivo });
+              }
               reset();
+              ctx.emit('cancelar');
             }
             
             
@@ -347,8 +372,9 @@ export default {
                   cargaCinco: cargaCinco.value,
                   unidad: unidadTiempo.value,
                   observaciones: observaciones.value
-                });
+                });                
                 reset();
+                ctx.emit('cancelar');
             }
             else{
               respuesta = await store.dispatch('ejercicios/editEjercicio',{
@@ -363,9 +389,15 @@ export default {
                 tiempo: tiempo.value,
                 nombre: nombre.value,
                 preparacion: preparacion.value,
-                idPerfil: 2 //corregir esto luego con login
+                idPerfil: perfil.value.id
               });
+              if (imagen.value != '') {
+                await store.dispatch('uploads/editUploads',{coleccion: 'ejercicios',id: respuesta.id, archivo: primerArchivo });
+                respuesta.img = uploads.value;
+                await store.dispatch('ejercicios/cambiarImagen', respuesta);
+              }
               reset();
+              ctx.emit('cancelar');
             }
             
             
@@ -390,6 +422,42 @@ export default {
           }
                     
         } 
+        onMounted(()=>{
+          fetchPerfil();
+          cambiarImagen();
+        })
+        const uploads = computed(() => store.getters['uploads/getUrl']);
+        const perfil = computed(() => store.getters['perfiles/getPerfil']);
+        const fetchPerfil = async()=>{
+          await store.dispatch('perfiles/loadPerfil',{id: user.value.id});
+        }
+        const user = computed(() => store.getters['auth/getMe']);
+        
+        const cambiarImagen = () => {
+          
+            
+            const $seleccionArchivos = document.querySelector("#seleccionArchivos"),
+            $imagenPrevisualizacion = document.querySelector("#imagenPrevisualizacion");
+            if ($seleccionArchivos) {
+             
+              // Escuchar cuando cambie
+              $seleccionArchivos.addEventListener("change", () => {
+                // Los archivos seleccionados, pueden ser muchos o uno
+                const archivos = $seleccionArchivos.files;
+                // Si no hay archivos salimos de la función y quitamos la imagen
+                if (!archivos || !archivos.length) {
+                  imagen.value = "";
+                  return;
+                }
+                // Ahora tomamos el primer archivo, el cual vamos a previsualizar
+                primerArchivo = archivos[0];
+                // Lo convertimos a un objeto de tipo objectURL
+                const objectURL = URL.createObjectURL(primerArchivo);
+                // Y a la fuente de la imagen le ponemos el objectURL
+                imagen.value = objectURL;
+              });
+            }
+        };
         const reset =()=>{
           detalles.value='',
           ejecucion.value='',
@@ -399,6 +467,7 @@ export default {
           idMusculoPrincipal.value='',
           idMusculoSecundario.value='',
           tiempo.value=0,
+          imagen.value='',
           nombre.value='',
           show.value=false,
           preparacion.value='',
@@ -415,6 +484,7 @@ export default {
           idMusculoSecundario.value=props.objeto.idMusculoSecundario
           tiempo.value=props.objeto.tiempo
           nombre.value=props.objeto.nombre
+          imagen.value=props.objeto.img
           show.value=props.isRutina
           preparacion.value=props.objeto.preparacion
         })
@@ -466,13 +536,30 @@ export default {
           cargaCinco,
           unidadTiempo,
           show,
-          observaciones
+          observaciones,
+          imagen,
+          imagenSeleccionada,
+          cambiarImagen,
+          user
         }
     }
 }
 </script>
 
 <style>
+.input{
+  opacity: 0;
+  position: absolute;
+}
+.imagen{
+  position: relative;
+}
+.labelArchivo{
+  position: absolute;
+  z-index: 1;
+  top: 6%;
+  left: 4%;
+}
 .grid{
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -501,4 +588,8 @@ export default {
 .gris{
   color: #707070;
 }
+.cancelar{
+  padding-top: 0;
+}
+
 </style>

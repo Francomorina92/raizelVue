@@ -52,7 +52,7 @@ export default defineComponent({
 </script>
 <style scoped>
 .my-card{
-  width: 100%;
+  width: 100% !important;
 }
 .img{
   padding: 50px;

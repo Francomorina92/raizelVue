@@ -30,6 +30,17 @@ export default{
         state.ejercicios = [ ...ejercicios]
         state.isLoading = false
     },
+    cambiarImagen : ( state, imagen ) => {
+        const ejercicios = state.ejercicios.map(function (x) {
+            if (x.id==imagen.id) {
+                return imagen                
+            }else{
+                return x
+            }
+        });
+        state.ejercicios = [ ...ejercicios]
+        state.isLoading = false
+    },
     setRespuesta : ( state, respuesta ) => {
         state.respuesta = respuesta
     },
