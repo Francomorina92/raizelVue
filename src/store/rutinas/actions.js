@@ -125,7 +125,7 @@ export default {
         try {
             commit('setLoading', true )
             const {data} = await api.get(`/rutinas/detalles`,{params:{rutina: objeto.id}})
-            commit('setDetalle', data[0] )
+            commit('setDetalles', data )
         } catch (error) {
             commit('setError', error )
         }finally{

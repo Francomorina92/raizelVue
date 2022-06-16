@@ -7,63 +7,38 @@
           <q-btn
             class="plus q-ml-md"
             size="12px"
+            label="Anterior"
             color="primary"
-            round
             unelevated
             icon="fa-solid fa-plus"
-            @click="crear()"
-            v-if="rutina.idPerfil == perfil.id"
+            @click="siguienteRutina('A')"
+            v-if="index > 0"
             />
           <q-btn
             class="plus q-ml-md"
             size="12px"
+            label="Siguiente"
             color="primary"
-            round
             unelevated
-            icon="fa-solid fa-circle-play"
-            @click="recorrerRutina()"
-            v-if="detallesR.length > 0"
-            
+            icon="fa-solid fa-plus"
+            @click="siguienteRutina('S')"
+            v-if="index < detallesR.length -1"
             />
-            <q-btn
-              class="plus q-ml-md"
-              size="12px"
-              color="primary"
-              label="Ver Perfil"
-              unelevated
-              @click="verPerfil"
-              />
-            <q-rating
-              v-model="meGusta"
-              max="1"
-              size="3em"
-              color="primary"
-              color-selected="primary"
-              class="q-ml-md"
-              icon="favorite_border"
-              icon-selected="favorite"
-              icon-half="favorite"
-              no-dimming
-              @click="darLike"
-              v-if="rutina.idPerfil != perfil.id"
+          <q-btn
+            class="plus q-ml-md"
+            size="12px"
+            label="Terimar"
+            color="primary"
+            unelevated
+            @click="terminar()"
+            v-if="index == detallesR.length -1"
             />
         </div>
       </div>
     </div>
-    <div v-if="show" class="q-pa-md">
-      <create @cancelar="cancelar()" :objeto="objeto" :objetoE="detalleE" :isRutina="true" :ejercicios="ejercicios" :categorias="categorias" :musculos="musculos" :equipamientos="equipamientos" :accion="accion" class="tabla index"></create>
+    <div v-if="show" class="q-pa-md" >
+      <ejercicio @cancelar="cancelar()" :objeto="objeto" :objetoE="detalleE" :isRutina="true" :ejercicios="ejercicios" :categorias="categorias" :musculos="musculos" :equipamientos="equipamientos" :accion="accion" class="tabla index"></ejercicio>
     </div>
-    <div class="flex" v-if="detallesR"> 
-        <detalle v-for="{id = 0, nombre, musculoPrincipal, musculoSecundario, tiempo, img} in detallesImagen" :key="id"  
-        :nombre="nombre"
-        :musculoPrincipal="musculoPrincipal"
-        :musculoSecundario="musculoSecundario"
-        :tiempo="tiempo"
-        :imagen="img"        
-        class="q-ma-md detalle"
-        @click="verEjercicio(id)"
-        ></detalle>
-      </div>
   </q-page>
 </template>
 
@@ -72,21 +47,21 @@ import {  exportFile, useQuasar } from 'quasar'
 import { defineComponent, ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex'
-import Detalle  from '../components/Detalle.vue';
-import Create from '../components/CreateEjercicio.vue';
+import Ejercicio from '../components/Ejercicio.vue';
 
 
 export default defineComponent({
-  components: { Create, Detalle },
-  name: 'Rutina',
+  components: { Ejercicio },
+  name: 'RecorrerRutina',
   setup(){
     const route = useRoute(),
           router = useRouter(),
           store = useStore(),
           $q = useQuasar(),
           objeto = ref({}),
-          detalleE = ref({}),
+          detalleE = ref([]),
           accion = ref(),
+          index = ref(0),
           meGusta = ref(),
           filtroEjercicio = ref(''),
           show = ref(false);
@@ -114,12 +89,9 @@ export default defineComponent({
     }
     const fetchPerfil = async()=>{
       await store.dispatch('perfiles/loadPerfil',{id: user.value.id});
-      fetchMeGusta();
+      siguienteRutina('x');
     }
-    const fetchMeGusta = async()=>{      
-      await store.dispatch('perfiles/loadMeGusta',{rutina: route.params.id, perfil: perfil.value.id});
-      meGusta.value = like.value == true ? 1 : 0;
-    }
+    
     const fetchEjercicios = async()=>{
       const fromEjercicio = computed(() => store.getters['ejercicios/getFrom']);
       await store.dispatch('ejercicios/loadEjercicios',{limite:100,desde:fromEjercicio.value});
@@ -177,14 +149,23 @@ export default defineComponent({
       accion.value='C';
       show.value = true;
     }
-    const verPerfil = ()=>{
-      router.push(`/perfil/${rutina.value.idPerfil}`);
+    const terminar = ()=>{
+      router.push(`/rutina/`+route.params.id);
     }
-  
-    const verEjercicio = (valor) => {
+    const siguienteRutina = (valor)=>{
+      detalleE.value={};
+      if (valor == 'S') {
+        index.value ++;
+      }else if(valor == 'A'){
+        index.value --;
+      }
+      detalleE.value = detallesR.value[index.value]
       show.value = false;
       objeto.value = {};
-      detalleE.value = detallesR.value.find( detalle => detalle.id === valor )
+      verEjercicio()
+    }
+  
+    const verEjercicio = () => {      
       const {id, nombre, detalles, preparacion, ejecucion, estado, idMusculoPrincipal, idMusculoSecundario, idEquipamiento,idCategoria, img} = ejercicios.value.find( ejercicio => ejercicio.id === detalleE.value.idEjercicio )
       objeto.value = {id,nombre, detalles, preparacion, ejecucion, estado, idMusculoPrincipal, idMusculoSecundario, idEquipamiento, idCategoria,  img}; 
       accion.value='E';
@@ -250,9 +231,6 @@ export default defineComponent({
           })
         }
     }
-    const recorrerRutina=()=>{
-      router.push('/recorrerrutina/'+route.params.id);
-    }
     return{
       accion,
       categorias,
@@ -266,12 +244,11 @@ export default defineComponent({
       columnsEjercicio,
       objeto,
       show,
-      verEjercicio,
+      siguienteRutina,
       fetchEjercicios,
       crear,
       exportarTable,
       darLike,
-      verPerfil,
       detalleE,
       rutina,
       user,
@@ -279,7 +256,8 @@ export default defineComponent({
       meGusta,
       detallesImagen,
       cancelar,
-      recorrerRutina
+      index,
+      terminar
     }
   }
 })
@@ -312,5 +290,8 @@ export default defineComponent({
 }
 .index{
   z-index: 1;
+}
+.h3{
+  margin: 0;
 }
 </style>

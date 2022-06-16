@@ -30,7 +30,7 @@
     <q-card class="my-card ancho" >
       <q-card-section class="alto">
        <q-btn-toggle
-          v-model="meGustas"
+          v-model="mcalificaciones"
           class="toggle q-ml-md"
           no-caps
           rounded
@@ -70,6 +70,7 @@ export default defineComponent({
           store = useStore(),
           $q = useQuasar();
     const listaLabels = ref({}),
+          mcalificaciones = ref(1),
           meGustas = ref(1);
           let myChart;
           let myChartCircle;
@@ -315,7 +316,8 @@ export default defineComponent({
     return{
       likes,
       meGustas,
-      seleccionMeGustas
+      seleccionMeGustas,
+      mcalificaciones
     }
   }
 })

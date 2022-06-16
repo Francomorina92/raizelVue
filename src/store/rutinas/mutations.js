@@ -42,6 +42,10 @@ export default{
         }
         state.isLoading = false
     },
+    setDetalles : ( state, detalles ) => {
+        state.detalles = [ ...detalles ]
+        state.isLoading = false
+    },
     resetDetalles : ( state ) => {
         state.isLoading= false,
         state.detalles= [],
