@@ -17,14 +17,7 @@
         <template v-slot:top-right>
           <q-input borderless dense debounce="100" v-model="filtroCategoria" placeholder="Búsqueda" @keyup.enter="busquedaCategoria(1)" @keyup.delete="busquedaCategoria(0)">
           </q-input>
-          <q-btn
-          color="primary"
-          icon-right="archive"
-          label="Exportar"
-          no-caps
-          unelevated
-          @click="exportarTable('cat')"
-          />
+          
           <q-btn
           class="plus"
           size="12px"
@@ -83,14 +76,7 @@
         <template v-slot:top-right>
           <q-input borderless dense debounce="100" v-model="filtroEquipamiento" placeholder="Búsqueda" @keyup.enter="busquedaEquipamiento(1)" @keyup.delete="busquedaEquipamiento(0)">
           </q-input>
-          <q-btn
-            color="primary"
-            icon-right="archive"
-            label="Exportar"
-            no-caps
-            unelevated
-            @click="exportarTable"
-          />
+          
           <q-btn
             class="plus"
             size="12px"
@@ -148,14 +134,7 @@
         <template v-slot:top-right>
           <q-input borderless dense debounce="100" v-model="filtroMusculo" placeholder="Búsqueda" @keyup.enter="busquedaMusculo(1)" @keyup.delete="busquedaMusculo(0)">
           </q-input>
-          <q-btn
-            color="primary"
-            icon-right="archive"
-            label="Exportar"
-            no-caps
-            unelevated
-            @click="exportarTable"
-          />
+          
           <q-btn
           class="plus"
           size="12px"
@@ -257,7 +236,7 @@ export default defineComponent({
       },
       { name: 'creado', align: 'center', label: 'Creado', field: row => row.createdAt, sortable: true },
       { name: 'actualizado', align: 'center', label: 'Actualizado', field: row => row.updatedAt, sortable: true },
-      { name: 'estado', align: 'center', label: 'Estado', field: row => row.estado,format: val => val?'Activa':'Desactivada', sortable: true }
+      { name: 'estado', align: 'center', label: 'Estado', field: row => row.estado,format: val => val ? 'Activa' : 'Desactivada', sortable: true }
     ]
     const extra=()=>{
       return true;
@@ -369,9 +348,7 @@ export default defineComponent({
         }
         const content = [columns.map(col => wrapCsvValue(col.label))].concat(
           rows.map(row => columns.map(col => wrapCsvValue(
-            typeof col.field === 'function'
-              ? col.field(row)
-              : row[ col.field === void 0 ? col.name : col.field ],
+            col.field(row),
             col.format
           )).join(','))
         ).join('\r\n')

@@ -265,7 +265,7 @@ export default defineComponent({
       calificaciones.value.forEach(c => {
         totalCalificaciones += c.cantidad;
       });
-      labelsCalificaciones = ['1', '2', '3','4', '5']
+      labelsCalificaciones = ['1 Estrella', '2 Estrellas', '3 Estrellas','4 Estrellas', '5 Estrellas']
       calificaciones.value.forEach(c => {
         
         let data = [0,0,0,0,0];

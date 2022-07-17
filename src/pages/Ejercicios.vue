@@ -16,15 +16,7 @@
       >
         <template v-slot:top-right>
           <q-input borderless dense debounce="100" v-model="filtroEjercicio" placeholder="Búsqueda" @keyup.enter="busquedaEjercicio(1)" @keyup.delete="busquedaEjercicio(0)">
-          </q-input>
-          <q-btn
-          color="primary"
-          icon-right="archive"
-          label="Exportar"
-          no-caps
-          unelevated
-          @click="exportarTable('ejercicio')"
-          />
+          </q-input>          
           <q-btn
           class="plus"
           size="12px"

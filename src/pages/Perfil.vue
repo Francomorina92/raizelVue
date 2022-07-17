@@ -229,7 +229,7 @@
         <div class="flex row items-center">
           <h1 class="text-h4 h4">Mis Rutinas</h1>
         </div>      
-        <div class="flex">
+        <div class="flex misRutinas">
           <q-carousel
             v-model="slide"
             transition-prev="slide-right"
@@ -237,13 +237,26 @@
             animated
             infinite
             control-color="primary"
-            arrows
-            :autoplay="2500"
+            :autoplay="1500000"
             height="auto"
+            ref="carousel"
             class="bg-grey-1 shadow-2 rounded-borders"
           >
-            <q-carousel-slide v-for="({id, nombre, calificacion, tiempo, img}, index) in rutinas" :key="id" :name="index"  class="column no-wrap">
+          <template v-slot:control v-if="rutinas.length > 3">
+            <q-carousel-control
+              position="left"
+              :offset="[18, 18]"
+              class="q-btn q-btn-item non-selectable outline q-btn--flat q-btn--round text-primary q-btn--actionable q-focusable q-hoverable q-btn--dense medio"
+            >
+              <q-btn
+                 round dense icon="arrow_left"
+                @click="$refs.carousel.previous()"
+              />
+            </q-carousel-control>
+          </template>
+            <q-carousel-slide v-for="({id, nombre, calificacion, tiempo, img}, index) in rutinaUno" :key="id" :name="index"  class="column no-wrap">
             <rutina  
+             v-if="id!=1"
               :nombre="nombre"
               :calificacion="calificacion"
               :tiempo="tiempo"
@@ -251,16 +264,78 @@
               class="q-ma-md rutina"
               @click="verRutina(id)"
               >
-              </rutina>
+              </rutina> <div class="rutina" v-else></div>
+            </q-carousel-slide>          
+          </q-carousel>
+          <q-carousel
+            v-model="slide"
+            transition-prev="slide-right"
+            transition-next="slide-left"
+            animated
+            infinite
+            control-color="primary"
+            :autoplay="1500000"
+            height="auto"
+            class="bg-grey-1 shadow-2 rounded-borders"
+          >
+            <q-carousel-slide v-for="({id, nombre, calificacion, tiempo, img}, index) in rutinaDos" :key="id" :name="index"  class="column no-wrap">
+            <rutina  
+             v-if="id!=1"
+              :nombre="nombre"
+              :calificacion="calificacion"
+              :tiempo="tiempo"
+              :imagen="img"
+              class="q-ma-md rutina"
+              @click="verRutina(id)"
+              >
+              </rutina> <div class="rutina" v-else></div>
+            </q-carousel-slide>          
+          </q-carousel>
+          <q-carousel
+            v-model="slide"
+            transition-prev="slide-right"
+            transition-next="slide-left"
+            animated
+            infinite
+            control-color="primary"
+            :autoplay="1500000"
+            height="auto"
+            class="bg-grey-1 shadow-2 rounded-borders rutinaTres"
+          >
+            <template v-slot:control v-if="rutinas.length > 3">
+              <q-carousel-control
+                position="right"
+                :offset="[18, 18]"
+                class="q-btn q-btn-item non-selectable outline q-btn--flat q-btn--round text-primary q-btn--actionable q-focusable q-hoverable q-btn--dense medio"
+              >
+                <q-btn
+                  round dense icon="arrow_right"
+                  @click="$refs.carousel.next()"
+                />
+              </q-carousel-control>
+            </template>
+            <q-carousel-slide v-for="({id, nombre, calificacion, tiempo, img}, index) in rutinaTres" :key="id" :name="index"  class="column no-wrap">
+            <rutina  
+             v-if="id!=1"
+              :nombre="nombre"
+              :calificacion="calificacion"
+              :tiempo="tiempo"
+              :imagen="img"
+              class="q-ma-md rutina"
+              @click="verRutina(id)"
+              >
+              </rutina> <div class="rutina" v-else></div>
             </q-carousel-slide>          
           </q-carousel>
         </div>
       </div>
+    </div>
+    <div class="q-pa-md flex justify-center  espacio">
       <div class="flex column items-center">
         <div class="flex row items-center">
-          <h1 class="text-h4 h4">Mis Favoritas</h1>
+          <h1 class="text-h4 h4">Mis Rutinas Favoritas</h1>
         </div>      
-        <div class="flex">
+        <div class="flex misRutinas">
           <q-carousel
             v-model="slideF"
             transition-prev="slide-right"
@@ -268,13 +343,26 @@
             animated
             infinite
             control-color="primary"
-            arrows
-            :autoplay="2500"
+            :autoplay="1500000"
             height="auto"
+            ref="carou"
             class="bg-grey-1 shadow-2 rounded-borders"
           >
-            <q-carousel-slide v-for="({id, nombre, calificacion, tiempo, img}, index) in rutinasF" :key="id" :name="index"  class="column no-wrap">
+          <template v-slot:control v-if="rutinasF.length > 3">
+            <q-carousel-control
+              position="left"
+              :offset="[18, 18]"
+              class="q-btn q-btn-item non-selectable outline q-btn--flat q-btn--round text-primary q-btn--actionable q-focusable q-hoverable q-btn--dense medio"
+            >
+              <q-btn
+                 round dense icon="arrow_left"
+                @click="$refs.carou.previous()"
+              />
+            </q-carousel-control>
+          </template>
+            <q-carousel-slide v-for="({id, nombre, calificacion, tiempo, img}, index) in favoritaUno" :key="id" :name="index"  class="column no-wrap">
             <rutina  
+             v-if="id!=1"
               :nombre="nombre"
               :calificacion="calificacion"
               :tiempo="tiempo"
@@ -282,7 +370,67 @@
               class="q-ma-md rutina"
               @click="verRutina(id)"
               >
-              </rutina>
+              </rutina> <div class="rutina" v-else></div>
+            </q-carousel-slide>          
+          </q-carousel>
+          <q-carousel
+            v-model="slideF"
+            transition-prev="slide-right"
+            transition-next="slide-left"
+            animated
+            infinite
+            control-color="primary"
+            :autoplay="1500000"
+            height="auto"
+            class="bg-grey-1 shadow-2 rounded-borders"
+          >
+            <q-carousel-slide v-for="({id, nombre, calificacion, tiempo, img}, index) in favoritaDos" :key="id" :name="index"  class="column no-wrap">
+            <rutina  
+             v-if="id!=1"
+              :nombre="nombre"
+              :calificacion="calificacion"
+              :tiempo="tiempo"
+              :imagen="img"
+              class="q-ma-md rutina"
+              @click="verRutina(id)"
+              >
+              </rutina> <div class="rutina" v-else></div>
+            </q-carousel-slide>          
+          </q-carousel>
+          <q-carousel
+            v-model="slideF"
+            transition-prev="slide-right"
+            transition-next="slide-left"
+            animated
+            infinite
+            control-color="primary"
+            :autoplay="1500000"
+            height="auto"
+            class="bg-grey-1 shadow-2 rounded-borders rutinaTres"
+          >
+            <template v-slot:control v-if="rutinasF.length > 3">
+              <q-carousel-control
+                position="right"
+                :offset="[18, 18]"
+                class="q-btn q-btn-item non-selectable outline q-btn--flat q-btn--round text-primary q-btn--actionable q-focusable q-hoverable q-btn--dense medio"
+              >
+                <q-btn
+                  round dense icon="arrow_right"
+                  @click="$refs.carou.next()"
+                />
+              </q-carousel-control>
+            </template>
+            <q-carousel-slide v-for="({id, nombre, calificacion, tiempo, img}, index) in favoritaTres" :key="id" :name="index"  class="column no-wrap">
+            <rutina  
+            v-if="id!=1"
+              :nombre="nombre"
+              :calificacion="calificacion"
+              :tiempo="tiempo"
+              :imagen="img"
+              class="q-ma-md rutina"
+              @click="verRutina(id)"
+              >
+              </rutina> <div class="rutina" v-else></div>
             </q-carousel-slide>          
           </q-carousel>
         </div>
@@ -323,6 +471,12 @@ export default defineComponent({
           slideC = ref(0),
           edit = ref(false),
           imagen= ref(''),
+          rutinaUno = ref([]),
+          rutinaDos = ref([]),
+          rutinaTres = ref([]),
+          favoritaUno = ref([]),
+          favoritaDos = ref([]),
+          favoritaTres = ref([]),
           primerArchivo;
     const cancelarM = ()=>{
       showM.value = false;
@@ -330,16 +484,20 @@ export default defineComponent({
     const fetchRutinas = async()=>{
       await store.dispatch('rutinas/resetRutinas');
       await store.dispatch('rutinas/loadRutinas', {idP: route.params.id});
+      rutinasEnTres();
     }
     const fetchRutinasFavoritas = async()=>{
       await store.dispatch('rutinas/loadRutinasFavoritas', {idP: route.params.id});
+      rutinasFEnTres();
     }
     const fetchCalificaciones = async()=>{
       await store.dispatch('comentarios/loadCalificaciones', {perfil: route.params.id});
       cambiarImagen();
     }
     const verRutina = (valor) =>{
-      router.push('/rutina/'+valor);
+      if (valor!=1) {
+        router.push('/rutina/'+valor);
+      }
     }
     const idRutinas = () =>{
       return user.value.id == route.params.id;
@@ -356,6 +514,64 @@ export default defineComponent({
       linkedin.value = perfil.value.linkedin
       twitter.value = perfil.value.twitter
       web.value = perfil.value.web
+      
+      fetchCalificaciones()
+    }
+    const rutinasEnTres = () =>{
+      let fila = 0;
+      for (let i = 0; i < rutinas.value.length; i= i+fila) {
+        let men = {
+          id: 1.0,
+          nombre: '',
+          calificacion: 0,
+          tiempo: 0,
+          img: ''
+        }
+        if (rutinas.value.length >= i+3) {
+          rutinaUno.value.push(rutinas.value[i]);
+          rutinaDos.value.push(rutinas.value[i+1]);
+          rutinaTres.value.push(rutinas.value[i+2]);
+          fila= fila+3;
+        }else if(rutinas.value.length >= i+2){
+          rutinaUno.value.push(rutinas.value[i]);
+          rutinaDos.value.push(rutinas.value[i+1]);
+          rutinaTres.value.push(men);
+          fila= fila+2;
+        }else{
+          rutinaUno.value.push(rutinas.value[i]);
+          rutinaDos.value.push(men);
+          rutinaTres.value.push(men);
+          fila++;
+        }
+      }
+    }
+    const rutinasFEnTres = () =>{
+      let fila = 0;
+      for (let i = 0; i < rutinasF.value.length; i= i+fila) {
+        let men = {
+          id: 1.0,
+          nombre: '',
+          calificacion: 0,
+          tiempo: 0,
+          img: ''
+        }
+        if (rutinasF.value.length >= i+3) {
+          favoritaUno.value.push(rutinasF.value[i]);
+          favoritaDos.value.push(rutinasF.value[i+1]);
+          favoritaTres.value.push(rutinasF.value[i+2]);
+          fila= fila+3;
+        }else if(rutinasF.value.length >= i+2){
+          favoritaUno.value.push(rutinasF.value[i]);
+          favoritaDos.value.push(rutinasF.value[i+1]);
+          favoritaTres.value.push(men);
+          fila= fila+2;
+        }else{
+          favoritaUno.value.push(rutinasF.value[i]);
+          favoritaDos.value.push(men);
+          favoritaTres.value.push(men);
+          fila++;
+        }
+      }
     }
     const editar = () => {
       edit.value = true;
@@ -398,8 +614,7 @@ export default defineComponent({
       extra(),
       fetchPerfil(),
       fetchRutinas(),
-      fetchRutinasFavoritas(),
-      fetchCalificaciones()
+      fetchRutinasFavoritas()
     );
     
     const cambiarImagen = () => {
@@ -456,6 +671,12 @@ export default defineComponent({
       user,
       edit,
       rutinas,
+      rutinaUno,
+      rutinaDos,
+      rutinaTres,
+      favoritaUno,
+      favoritaDos,
+      favoritaTres,
       fetchPerfil,
       verRutina,
       fetchRutinas,
@@ -474,6 +695,15 @@ export default defineComponent({
 })
 </script>
 <style scoped>
+.misRutinas{
+  gap: 15px;
+}
+.medio{
+  top: 35%;
+}
+.rutinaTres .q-carousel__prev-arrow {
+  display: none !important;
+}
 .input{
   opacity: 0;
   position: absolute;
@@ -511,6 +741,7 @@ export default defineComponent({
 }
 .rutina{
   margin-left: 0;
+  min-width: 200px;
 }
 .espacio{
   column-gap: 5%;
