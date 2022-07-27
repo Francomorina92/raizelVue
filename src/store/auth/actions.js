@@ -34,7 +34,8 @@ export const confirmar = async ({commit}, objeto) => {
 export const cambiarPassword = async ({commit}, objeto) => {
     try {
         commit('setError', null )
-        await api.post('/auth/cambiarPassword',objeto)
+        const {data} = await api.post('/auth/cambiarPassword',objeto);
+        return data.correcto;
     } catch (ex) {
         commit('setError', ex.response.data )
     }

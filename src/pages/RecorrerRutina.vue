@@ -94,7 +94,7 @@ export default defineComponent({
     
     const fetchEjercicios = async()=>{
       const fromEjercicio = computed(() => store.getters['ejercicios/getFrom']);
-      await store.dispatch('ejercicios/loadEjercicios',{limite:100,desde:fromEjercicio.value});
+      await store.dispatch('ejercicios/loadEjercicios',{limite:100,desde:fromEjercicio.value,id: rutina.value.idPerfil});
     }
     const fetchDetalles = async()=>{
       await store.dispatch('rutinas/resetDetalles');
@@ -109,7 +109,9 @@ export default defineComponent({
     }
     const fetchRutina = async()=>{
       await store.dispatch('rutinas/loadRutina',{id: route.params.id});
-      fetchPerfil();      
+      fetchPerfil(); 
+      fetchEjercicios();
+      fetchDetalles();     
     }
     const darLike = async() =>{
       await store.dispatch('perfiles/setMeGusta',{idRutina: route.params.id, idPerfil: perfil.value.id, like: meGusta.value == 1 ? true : false});
@@ -130,8 +132,7 @@ export default defineComponent({
     const fetchDatos = async()=>{
       Promise.all([fetchMusculos(),fetchEquipamientos(),fetchCategorias()])
       .then(()=>{
-        fetchEjercicios();
-        fetchDetalles();
+        
         fetchRutina();
       })
       .catch(()=>{

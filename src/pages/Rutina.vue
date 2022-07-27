@@ -122,22 +122,25 @@ export default defineComponent({
     }
     const fetchEjercicios = async()=>{
       const fromEjercicio = computed(() => store.getters['ejercicios/getFrom']);
-      await store.dispatch('ejercicios/loadEjercicios',{limite:100,desde:fromEjercicio.value});
+      await store.dispatch('ejercicios/loadEjercicios',{limite:100,desde:fromEjercicio.value, id: rutina.value.idPerfil});
+      fetchDetalles();
     }
     const fetchDetalles = async()=>{
       await store.dispatch('rutinas/resetDetalles');
       await store.dispatch('rutinas/loadDetalles',{limite:100,desde:0, id: route.params.id});
       detallesImagen.value = detallesR.value;
-      detallesImagen.value.filter((d)=>{
+      let arraySuplementario = [];
+      for (let i = 0; i < detallesImagen.value.length; i++) {
+        let d = detallesImagen.value[i];
         let {img} = ejercicios.value.find( ejercicio => ejercicio.id === d.idEjercicio )
-        let det = d;
-        det.img = img;
-        return det;
-      })
+        arraySuplementario.push({...d, img: img});
+      }
+      detallesImagen.value =arraySuplementario;
     }
     const fetchRutina = async()=>{
       await store.dispatch('rutinas/loadRutina',{id: route.params.id});
-      fetchPerfil();      
+      fetchPerfil();
+      fetchEjercicios();      
     }
     const darLike = async() =>{
       await store.dispatch('perfiles/setMeGusta',{idRutina: route.params.id, idPerfil: perfil.value.id, like: meGusta.value == 1 ? true : false});
@@ -158,8 +161,7 @@ export default defineComponent({
     const fetchDatos = async()=>{
       Promise.all([fetchMusculos(),fetchEquipamientos(),fetchCategorias()])
       .then(()=>{
-        fetchEjercicios();
-        fetchDetalles();
+        
         fetchRutina();
       })
       .catch(()=>{

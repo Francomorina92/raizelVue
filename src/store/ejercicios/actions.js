@@ -5,7 +5,7 @@ export default {
     async loadEjercicios({ commit },objeto) {
         try {
             commit('setLoading', true )
-            const {data} = await api.get(`/ejercicios`, {params:{limite:objeto.limite, desde:objeto.desde, filtro: objeto.filtro}})
+            const {data} = await api.get(`/ejercicios`, {params:{limite:objeto.limite, desde:objeto.desde, filtro: objeto.filtro, id: objeto.id ? objeto.id : 0}})
             const rows=data.ejercicios;
             if ( !rows ){
                 commit('setLoading', false )

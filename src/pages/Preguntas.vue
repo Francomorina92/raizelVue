@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex column">
-    <div class="q-pa-md row flex justify-center q-gutter-md">
+    <div class=" row flex justify-center q-gutter-md">
       <q-card class="my-card">
         <q-card-section>
           <h6 class="margen">¿Qué es Raizel?</h6>

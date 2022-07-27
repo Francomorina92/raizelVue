@@ -164,6 +164,7 @@ export default defineComponent({
       
       let rutinas = [];
       let fechaActual = new Date();
+      fechaActual.setMonth(fechaActual.getMonth() + 1);
       
       //Creamos un nuevo objeto donde vamos a almacenar por idRutina. 
       let rutinasArray = {}

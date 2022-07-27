@@ -84,7 +84,7 @@
               <q-item-label >Twitter</q-item-label> 
             </q-item-section>
           </q-item>
-          <q-item clickable :href="perfil.linkedin" target="_blank" v-if="perfil.linkedin || edit">
+          <!-- <q-item clickable :href="perfil.linkedin" target="_blank" v-if="perfil.linkedin || edit">
             <q-item-section avatar>
               <q-icon color="blue-9" name="fa-brands fa-linkedin" />
             </q-item-section>
@@ -92,7 +92,7 @@
             <q-item-section>
               <q-item-label >Linkedin</q-item-label> 
             </q-item-section>
-          </q-item>
+          </q-item> -->
           <q-item clickable :href="perfil.web" target="_blank" v-if="perfil.web || edit">
             <q-item-section avatar>
               <q-icon color="indigo-8" name="fa-solid fa-globe" />
@@ -154,7 +154,7 @@
               <q-input v-model="twitter" placeholder="Link de twitter" type="text" :dense="true" class="w90 gris"/>
             </q-item-section>
           </q-item>
-          <q-item >
+          <!-- <q-item >
             <q-item-section avatar>
               <q-icon color="blue-9" name="fa-brands fa-linkedin" />
             </q-item-section>
@@ -162,7 +162,7 @@
             <q-item-section>
               <q-input v-model="linkedin" placeholder="Link de linkedin" type="text" :dense="true" class="w90 gris"/>
             </q-item-section>
-          </q-item>
+          </q-item> -->
           <q-item >
             <q-item-section avatar>
               <q-icon color="indigo-8" name="fa-solid fa-globe" />
@@ -188,7 +188,9 @@
             @click="calificar()"
             v-if="user.id != perfil.idUsuario"
           />
-        </div>      
+        </div>    
+        <q-card class="noHay" v-if="calificaciones.length == 0">
+          Sin Calificaciones</q-card>  
         <div class="flex">
           <q-carousel
             v-model="slideC"
@@ -228,7 +230,9 @@
       <div class="flex column items-center">
         <div class="flex row items-center">
           <h1 class="text-h4 h4">Mis Rutinas</h1>
-        </div>      
+        </div>  
+        <q-card class="noHay" v-if="rutinas.length == 0">
+          Aun no tengo rutinas</q-card>    
         <div class="flex misRutinas">
           <q-carousel
             v-model="slide"
@@ -335,6 +339,8 @@
         <div class="flex row items-center">
           <h1 class="text-h4 h4">Mis Rutinas Favoritas</h1>
         </div>      
+        <q-card class="noHay" v-if="rutinasF.length == 0">
+          Sin rutinas favoritas</q-card>
         <div class="flex misRutinas">
           <q-carousel
             v-model="slideF"
@@ -461,7 +467,6 @@ export default defineComponent({
   let  show = ref(false),
           facebook = ref(''),
           instagram = ref(''),
-          linkedin = ref(''),
           twitter = ref(''),
           web = ref(''),
           nombre = ref(''),
@@ -511,7 +516,6 @@ export default defineComponent({
       await store.dispatch('perfiles/loadPerfilPropio',{id: route.params.id});
       facebook.value = perfil.value.facebook
       instagram.value = perfil.value.instagram
-      linkedin.value = perfil.value.linkedin
       twitter.value = perfil.value.twitter
       web.value = perfil.value.web
       
@@ -577,7 +581,6 @@ export default defineComponent({
       edit.value = true;
       facebook.value = perfil.value.facebook
       instagram.value = perfil.value.instagram
-      linkedin.value = perfil.value.linkedin
       twitter.value = perfil.value.twitter
       web.value = perfil.value.web
       nombre.value = perfil.value.nombre
@@ -601,7 +604,7 @@ export default defineComponent({
       edit.value = false;
       await store.dispatch('perfiles/editPerfil',{id: route.params.id,idUsuario: user.value.id, nombre: nombre.value,apellido: apellido.value,facebook: facebook.value,twitter: twitter.value,instagram: instagram.value,web: web.value});
       if (imagen.value != '') {
-        await store.dispatch('uploads/editUploads',{coleccion: 'usuarios',id: perfil.value.id, archivo: primerArchivo });
+        await store.dispatch('uploads/editUploads',{coleccion: 'usuarios',id: user.value.id, archivo: primerArchivo });
         await store.dispatch('auth/setImg', uploads.value );
       }
     }
@@ -618,11 +621,7 @@ export default defineComponent({
     );
     
     const cambiarImagen = () => {
-        if(user.value.id == perfil.value.idUsuario){
-          imagen.value = user.value.img;
-        }else{
           imagen.value = perfil.value.img ? perfil.value.img : '';
-        }
         const $seleccionArchivos = document.querySelector("#seleccionArchivos"),
         $imagenPrevisualizacion = document.querySelector("#imagenPrevisualizacion");
 
@@ -660,7 +659,6 @@ export default defineComponent({
       calificar,
       facebook,
       instagram,
-      linkedin,
       twitter,
       web,
       nombre,
@@ -748,6 +746,14 @@ export default defineComponent({
 }
 .img{
   padding: 2px;
+}
+.noHay{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  min-width: 350px;
+  font-size: 35px;
 }
 
 </style>

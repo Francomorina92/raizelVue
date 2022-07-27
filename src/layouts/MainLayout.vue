@@ -253,7 +253,11 @@ export default defineComponent({
     const perfil = computed(() => store.getters['perfiles/getPerfil']);
     onMounted(()=>{
       fetchPerfil();
-    })
+    });
+    onUpdated(()=>{
+      fetchPerfil();
+    });
+
     return {
       autenticado,
       linksList,
